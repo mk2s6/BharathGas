@@ -92,14 +92,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-<<<<<<< HEAD
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-=======
 app.use('/img', express.static(path.join(__dirname, 'public/img')));
 
 /**
@@ -131,21 +123,10 @@ if (config.get('environment') === 'test') {
 // catch 404 and forward to error handler
 
 app.use((req, res, next) => {
->>>>>>> dev
   next(createError(404));
 });
 
 // error handler
-<<<<<<< HEAD
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-=======
 app.use((err, req, res, next) => {
   // console.log(err);
   // set locals, only providing error in development
@@ -156,7 +137,6 @@ app.use((err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
   res.send(responseGenerator.errorResponse('Not Found', err.status, 'Resource you are trying to access is not found', '', req.url));
->>>>>>> dev
 });
 
 module.exports = app;
