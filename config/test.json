@@ -1,0 +1,19 @@
+{
+  "serverConfig": {
+    "port": "4202"
+  },
+  "dbConfig": {
+    "host": "localhost",
+    "user": "root",
+    "password": "",
+    "database": "test_tms"
+  },
+  "nodeMailerConfig": {
+    "host": "server3.hostsoch.in",
+    "port": "587",
+    "email": "",
+    "password": "",
+    "from":"no-reply@fsjars.com"
+  },
+  "emailBaseLink": "http://localhost:3000"
+}
