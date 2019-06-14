@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+// const express = require('express');
+// // TODO Change hash to auth
+// const auth = require('../model/auth');
+// const hash = require('../model/auth');
+// const pool = require('../database/db');
+// const vs = require('../model/validator-sanitizer');
+// const responseGenerator = require('../model/response-generator');
+// const constant = require('../model/constant');
+// const error = require('../model/error');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+// const router = express.Router();
 
-module.exports = router;
+// module.exports = router;

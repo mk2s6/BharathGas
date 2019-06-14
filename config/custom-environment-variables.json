@@ -1,0 +1,24 @@
+{
+  "environment": "NODE_ENV",
+  "authJWT": {
+    "secret": "AUTH_JWT_SECRET"
+  },
+  "logging": "LOGGING",
+  "serverConfig": {
+    "port": "PORT"
+  },
+  "dbConfig": {
+    "host": "DB_HOST",
+    "user": "DB_USER",
+    "password": "DB_PASSWORD",
+    "database": "DB_DATABASE_NAME"
+  },
+  "emailBaseLink": "EMAIL_BASE_LINK",
+  "nodeMailerConfig": {
+    "host": "NODEMAILER_HOST",
+    "port": "NODEMAILER_PORT",
+    "email": "NODEMAILER_EMAIL",
+    "password": "NODEMAILER_PASSWORD",
+    "from": "NODEMAILER_FROM"
+  }
+}
