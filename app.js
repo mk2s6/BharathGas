@@ -37,9 +37,9 @@ const indexRouter = require('./routes/index');
 // const fsjarsEmployeeRouter = require('./routes/fsjars_employee');
 const locationRouter = require('./routes/location');
 const companyRouter = require('./routes/company');
-const enquiryRouter = require('./routes/enquiry');
+// const enquiryRouter = require('./routes/enquiry');
 const companyEmployeeRouter = require('./routes/employee');
-const notificationRouter = require('./routes/notification');
+// const notificationRouter = require('./routes/notification');
 
 const app = express();
 
@@ -108,9 +108,9 @@ app.use('/test', indexRouter);
 // app.use('/fsjars_employee', fsjarsEmployeeRouter);
 app.use('/location', locationRouter);
 app.use('/company', companyRouter);
-app.use('/enquiry', enquiryRouter);
+// app.use('/enquiry', enquiryRouter);
 app.use('/employee', companyEmployeeRouter);
-app.use('/notification', notificationRouter);
+// app.use('/notification', notificationRouter);
 
 /**
  * Routes defined for testing only included in test environment
