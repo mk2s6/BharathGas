@@ -36,9 +36,9 @@ router.post('/validator', [vs.isValidStrLenWithTrim('body', 'a', 0, 0, 'Max leng
 });
 
 /**
- * Date validator for FSJ date format
+ * Date validator for DB date format
  */
-router.post('/validfsjdate', [vs.isValidFSJDate('body', 'date')], async (req, res) => {
+router.post('/validDBdate', [vs.isValidDBDate('body', 'date')], async (req, res) => {
   const errors = vs.getValidationResult(req);
   if (!errors.isEmpty()) {
     const fieldsToValidate = ['date'];
@@ -49,9 +49,9 @@ router.post('/validfsjdate', [vs.isValidFSJDate('body', 'date')], async (req, re
 });
 
 /**
- * Date validator for FSJ time format
+ * Date validator for DB time format
  */
-router.post('/validfsjtime', [vs.isValidFSJTime('body', 'time')], async (req, res) => {
+router.post('/validDBtime', [vs.isValidDBTime('body', 'time')], async (req, res) => {
   const errors = vs.getValidationResult(req);
   if (!errors.isEmpty()) {
     const fieldsToValidate = ['time'];
