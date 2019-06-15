@@ -101,8 +101,9 @@ const TOKEN_NAME = 'x-id-token';
 const tokenType = {
   KEY: 'tt',
   value: {
-    EMPLOYEE: 'ce', // Company Employee
-    FSJARS_EMPLOYEE: 'fsje', // FSJARS's Employee
+    DISTRIBUTOR: 'dist', // Company Employee
+    SALES_OFFICER: 'saof', // FSJARS's Employee
+    CUSTOMER: 'cust',
   },
 };
 

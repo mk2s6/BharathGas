@@ -148,18 +148,51 @@ const errList = {
         exception generated a Database error or Internal error. This might have happened
         because of database server which might be down `,
     },
-    ERR_SELECT_COUNTRY_LIST_FAILURE: {
+    ERR_INSERT_COUNTRY_NO_EXCEPTION_INSERT_ERROR: {
       code: '50006',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'There is no error or exception when the country is being inserted and country is not inserted.',
+    },
+    ERR_INSERT_COUNTRY_FAILURE: {
+      code: '50007',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: `Insertion of details to the country table fails
+              there may be DB error or Query error`,
+    },
+    ERR_SELECT_COUNTRY_LIST_FAILURE: {
+      code: '50008',
       message: errMsg.INTERNAL_SERVER_ERROR,
       internalDescription: 'there is an error while selecting the list of countries from the database',
     },
+    ERR_INSERT_STATE_NO_EXCEPTION_INSERT_ERROR: {
+      code: '50009',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'There is no error or exception when the state is being inserted and state is not inserted.',
+    },
+    ERR_INSERT_STATE_FAILURE: {
+      code: '50010',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: `Insertion of details to the state table fails
+              there may be DB error or Query error`,
+    },
     ERR_SELECT_STATE_LIST_FAILURE: {
-      code: '5007',
+      code: '50011',
       message: errMsg.INTERNAL_SERVER_ERROR,
       internalDescription: 'there is an error while selecting the list of states from the database',
     },
+    ERR_INSERT_CITY_NO_EXCEPTION_INSERT_ERROR: {
+      code: '50012',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'There is no error or exception when the city is being inserted and city is not inserted.',
+    },
+    ERR_INSERT_CITY_FAILURE: {
+      code: '50013',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: `Insertion of details to the city table fails
+              there may be DB error or Query error`,
+    },
     ERR_SELECT_CITY_LIST_FAILURE: {
-      code: '50023',
+      code: '50014',
       message: errMsg.INTERNAL_SERVER_ERROR,
       internalDescription: 'there is an error while selecting the list of cities from the database',
     },
