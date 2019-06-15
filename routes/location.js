@@ -1,5 +1,5 @@
 /**
- * This holds the route to add and view something from the lt_<tables>
+ * This holds the route to add and view something from the loc_<tables>
  *
  * This is the things it can do: add manufacturer, view them, add category etc.
  * OR add new customer state, equipment status
@@ -34,7 +34,7 @@ const router = express.Router();
 //     }
 //     const beName = req.body.ui_name;
 //     try {
-//       const [rows] = await pool.execute('INSERT INTO lt_country (country, added_by) VALUES (?, ?)', [
+//       const [rows] = await pool.execute('INSERT INTO loc_country (country, added_by) VALUES (?, ?)', [
 //         beName,
 //         req.user.id,
 //       ]);
@@ -66,7 +66,7 @@ const router = express.Router();
  */
 router.get('/country/list', async (req, res) => {
   try {
-    const [rows] = await pool.execute('SELECT GROUP_CONCAT(lt_country_country) as country FROM lt_country', []);
+    const [rows] = await pool.execute('SELECT GROUP_CONCAT(loc_country_country) as country FROM loc_country', []);
     return res.status(200).send(responseGenerator.success('Country list', 'List of Countries', rows[0].country.split(',')));
   } catch (e) {
     console.log(e);
@@ -101,7 +101,7 @@ router.get('/country/list', async (req, res) => {
 //     const beName = req.body.ui_name;
 //     const beCountry = req.body.ui_country;
 //     try {
-//       const [rows] = await pool.execute('INSERT INTO lt_state (state, country, added_by) VALUES (?, ?, ?)', [
+//       const [rows] = await pool.execute('INSERT INTO loc_state (state, country, added_by) VALUES (?, ?, ?)', [
 //         beName,
 //         beCountry,
 //         req.user.id,
@@ -143,7 +143,7 @@ router.get(
       return res.status(422).send(responseGenerator.validationError(errors.mapped(), fieldsToValidate));
     }
     try {
-      const [rows] = await pool.execute('SELECT GROUP_CONCAT(lt_state_state) as state FROM lt_state WHERE lt_state_country = ?', [
+      const [rows] = await pool.execute('SELECT GROUP_CONCAT(loc_state_state) as state FROM loc_state WHERE loc_state_country = ?', [
         req.params.ui_country,
       ]);
       return res.status(200).send(responseGenerator.success('State list', 'List of States', rows[0].state.split(',')));
@@ -180,7 +180,7 @@ router.get(
 //     const beName = req.body.ui_name;
 //     const beState = req.body.ui_state;
 //     try {
-//       const [rows] = await pool.execute('INSERT INTO lt_city (city, state, added_by) VALUES (?, ?, ?)', [
+//       const [rows] = await pool.execute('INSERT INTO loc_city (city, state, added_by) VALUES (?, ?, ?)', [
 //         beName,
 //         beState,
 //         req.user.id,
@@ -222,7 +222,7 @@ router.get(
       return res.status(422).send(responseGenerator.validationError(errors.mapped(), fieldsToValidate));
     }
     try {
-      const [rows] = await pool.execute('SELECT GROUP_CONCAT(lt_city_city) as city FROM lt_city WHERE lt_city_state = ?', [req.params.ui_state]);
+      const [rows] = await pool.execute('SELECT GROUP_CONCAT(loc_city_city) as city FROM loc_city WHERE loc_city_state = ?', [req.params.ui_state]);
       return res.status(200).send(responseGenerator.success('City list', 'List of Cities', rows[0].city.split(',')));
     } catch (e) {
       const beCityListSelectError = error.errList.internalError.ERR_SELECT_CITY_LIST_FAILURE;
