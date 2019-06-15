@@ -92,6 +92,21 @@ const errList = {
       message: 'Please login again to continue',
       internalDescription: 'There is an error while employee tries to visit which the select query does not return any rows regarding the employee',
     },
+    ERR_INSERT_COUNTRY_DUPLICATE_ENTRY: {
+      code: '30007',
+      message: 'Insertion not possible,  country with the given name already exists..!',
+      internalDescription: 'Insertion of details of a country fails as  there is a duplicate entry with the same name',
+    },
+    ERR_INSERT_STATE_DUPLICATE_ENTRY: {
+      code: '30008',
+      message: 'Insertion not possible,  state with the given name already exists..!',
+      internalDescription: 'Insertion of details of a state fails as  there is a duplicate entry with the same name',
+    },
+    ERR_INSERT_CITY_DUPLICATE_ENTRY: {
+      code: '30009',
+      message: 'Insertion not possible,  city with the given name already exists..!',
+      internalDescription: 'Insertion of details of a city fails as  there is a duplicate entry with the same name',
+    },
   },
 
   //
@@ -132,6 +147,21 @@ const errList = {
       internalDescription: `while fetching the credentials for login
         exception generated a Database error or Internal error. This might have happened
         because of database server which might be down `,
+    },
+    ERR_SELECT_COUNTRY_LIST_FAILURE: {
+      code: '50006',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'there is an error while selecting the list of countries from the database',
+    },
+    ERR_SELECT_STATE_LIST_FAILURE: {
+      code: '5007',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'there is an error while selecting the list of states from the database',
+    },
+    ERR_SELECT_CITY_LIST_FAILURE: {
+      code: '50023',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'there is an error while selecting the list of cities from the database',
     },
   },
 };

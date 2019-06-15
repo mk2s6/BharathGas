@@ -148,6 +148,7 @@ router.get(
       ]);
       return res.status(200).send(responseGenerator.success('State list', 'List of States', rows[0].state.split(',')));
     } catch (e) {
+      console.log(e);
       const beStateListSelectError = error.errList.internalError.ERR_SELECT_STATE_LIST_FAILURE;
       return res.status(500).send(responseGenerator.internalError(beStateListSelectError));
     }
