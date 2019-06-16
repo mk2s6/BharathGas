@@ -67,6 +67,3 @@ typings/
 
 #vscode settings
 .vscode
-
-#local images
-public/img/

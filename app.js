@@ -24,6 +24,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const moment = require('moment');
+const hbs = require('express-hbs');
 const responseGenerator = require('./model/response-generator');
 const constant = require('./model/constant');
 
@@ -35,7 +36,7 @@ const constant = require('./model/constant');
 const indexRouter = require('./routes/index');
 const locationRouter = require('./routes/location');
 const distributorRouter = require('./routes/distributor');
-
+const homeRouter = require('./routes/home');
 
 const app = express();
 
@@ -88,7 +89,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/img', express.static(path.join(__dirname, 'public/img')));
+app.use(express.static(`${__dirname}/src`));
 
 /**
  * Session and Authentication
@@ -96,9 +97,22 @@ app.use('/img', express.static(path.join(__dirname, 'public/img')));
 // app.use(passport.initialize());
 
 /**
+ * View engine setup
+ */
+app.engine(
+  'hbs',
+  hbs.express4({
+    partialsDir: `${__dirname}/views/partials`,
+  }),
+);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
+
+/**
  *  Routing
  *  Here we have all routes defined in our production application
  */
+app.use('/home', homeRouter);
 app.use('/test', indexRouter);
 app.use('/location', locationRouter);
 app.use('/distributor', distributorRouter);
