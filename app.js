@@ -33,13 +33,9 @@ const constant = require('./model/constant');
  * Require for Routing
  */
 const indexRouter = require('./routes/index');
-// const usersRouter = require('./routes/users');
-// const fsjarsEmployeeRouter = require('./routes/fsjars_employee');
 const locationRouter = require('./routes/location');
-// const companyRouter = require('./routes/company');
-// const enquiryRouter = require('./routes/enquiry');
-const companyEmployeeRouter = require('./routes/employee');
-// const notificationRouter = require('./routes/notification');
+const distributorRouter = require('./routes/distributor');
+
 
 const app = express();
 
@@ -104,12 +100,8 @@ app.use('/img', express.static(path.join(__dirname, 'public/img')));
  *  Here we have all routes defined in our production application
  */
 app.use('/test', indexRouter);
-// app.use('/users', usersRouter);
-// app.use('/fsjars_employee', fsjarsEmployeeRouter);
 app.use('/location', locationRouter);
-// app.use('/company', companyRouter);
-// app.use('/enquiry', enquiryRouter);
-app.use('/employee', companyEmployeeRouter);
+app.use('/distributor', distributorRouter);
 // app.use('/notification', notificationRouter);
 
 /**

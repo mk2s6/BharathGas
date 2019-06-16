@@ -75,7 +75,7 @@ async function verifyPassword(password, hashedPassword) {
 function genAuthToken(payload) {
   // TODO call encode payload here
   // TODO Add this in try catch and throw our custom error
-  return jwt.sign(payload, jwtSecret, { expiresIn: '48h' });
+  return jwt.sign(payload, jwtSecret);
 }
 
 /**
@@ -103,7 +103,7 @@ function genAuthTokenResetPassword(payload) {
 function genAuthTokenVerifyEmail(payload) {
   // TODO call encode payload here
   // TODO Add this in try catch and throw our custom error
-  return jwt.sign(payload, jwtSecret, { expiresIn: '2d' });
+  return jwt.sign(payload, jwtSecret, { expiresIn: '30m' });
 }
 
 /**

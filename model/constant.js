@@ -108,9 +108,9 @@ const tokenType = {
 };
 
 const permissionKey = {
-  ENQUIRY_MANAGEMENT: 'p_eqm',
-  EMPLOYEE_MANAGEMENT: 'p_em',
-  COMPANY_SETTING: 'p_cs',
+  CUSTOMER_MANAGEMENT: 'p_com',
+  DISTRIBUTOR: 'p_d',
+  SALES_OFFICER_MANAGEMENT: 'p_som',
 };
 
 /**

@@ -262,7 +262,7 @@ function isEmpPassword(location, password, message) {
  *
  * @returns validation chain object of express-validator
  */
-function isCompanyEmployeePassword(location, password, message) {
+function isDistributorPassword(location, password, message) {
   const validator = getFunctionName(location);
   return validator(password).custom((paramPassword) => {
     if (!schemaCompanyEmployeePassword.validate(paramPassword)) throw new Error(message);
@@ -868,7 +868,7 @@ module.exports.isEmailOrMobile = isEmailOrMobile;
 module.exports.isGender = isGender;
 module.exports.isDOB = isDOB;
 module.exports.isEmpPassword = isEmpPassword;
-module.exports.isCompanyEmployeePassword = isCompanyEmployeePassword;
+module.exports.isDistributorPassword = isDistributorPassword;
 module.exports.isAmount = isAmount;
 module.exports.isBranches = isBranches;
 module.exports.isValidEnquiryClassification = isValidEnquiryClassification;
