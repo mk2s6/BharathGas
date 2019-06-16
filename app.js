@@ -112,7 +112,7 @@ app.set('view engine', 'hbs');
  *  Routing
  *  Here we have all routes defined in our production application
  */
-app.use('/home', homeRouter);
+app.use('/', homeRouter);
 app.use('/test', indexRouter);
 app.use('/location', locationRouter);
 app.use('/distributor', distributorRouter);
