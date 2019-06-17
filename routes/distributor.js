@@ -15,12 +15,17 @@ const multer = require('../model/multer');
 
 const router = express.Router();
 
+/**
+ * Route for distributor login page
+ * @name /distributor/login
+ */
+router.get('/login', async (req, res) => res.render('distributorLogin'));
 
 /**
  * route for company distributor login
  *
  * @name /distributor/login
- * 
+ *
  * @param ui_username : Email or mobile of the distributor
  * @param ui_password : password of the distributor
  *
@@ -41,7 +46,7 @@ router.post(
     const bePassword = req.body.ui_password;
     const beUsername = req.body.ui_username;
 
-    let qStrDistDetails = `SELECT dist_id, dist_name, dist_pwd, dist_is_email_verified FROM distributor `;
+    let qStrDistDetails = 'SELECT dist_id, dist_name, dist_pwd, dist_is_email_verified FROM distributor ';
 
     let qRespDistDetails;
     if (hf.isEmail(beUsername)) {
@@ -229,7 +234,7 @@ router.post(
 //         [distributorDetails] = await conn.query(
 //           `
 //             SELECT dist_name AS name
-//             FROM distributor WHERE dist_id = ?;          
+//             FROM distributor WHERE dist_id = ?;
 //           `,
 //           [req.user.id, req.user.cid],
 //         );
@@ -245,7 +250,7 @@ router.post(
 //       try {
 //         [companyDistInsert] = await conn.query(
 //           `
-//               INSERT INTO distributor (dist_name , dist_email, dist_pwd, dist_primary_mobile, dist_DOB, 
+//               INSERT INTO distributor (dist_name , dist_email, dist_pwd, dist_primary_mobile, dist_DOB,
 //                 dist_address, dist_city, dist_state, dist_country, dist_PIN, dist_image, dist_secondary_mobile,
 //                 dist_gender, dist_role, dist_comp_code dist_last_login_IP, dist_added_by, dist_added_by_name)
 //               SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, comp_code, ?, ?, ?, ?
@@ -301,7 +306,7 @@ router.post(
 //         // NOTE: We don't need to escape the 'bidsJoinString' because in validator we are checking branch ID's
 //         // to be integer hence it will work fine.
 //         [companyDistBranchList] = await pool.execute(
-//           ` 
+//           `
 //             SELECT bran_id AS id, bran_name AS name
 //             FROM branch
 //             WHERE bran_id IN ( ${bidsJoinString} ) AND bran_comp_id = ?
@@ -325,7 +330,7 @@ router.post(
 
 //       let compDistBranchLinkInsertQuery = `
 //               INSERT INTO distributor_manages_branch (emb_dist_id, emb_bran_id, emb_added_by, emb_added_by_name, emb_comp_id)
-//               VALUES 
+//               VALUES
 //             `;
 //       // console.log(companyDistBranchList);
 //       const compDistBranchLinkInsertValues = [];
@@ -488,7 +493,9 @@ router.put(
     try {
       [rows] = await pool.execute('SELECT dist_pwd as current_password FROM distributor WHERE dist_id = ?', [beUserID, req.user.cid]);
     } catch (err) {
-      const responseUnableToChange = responseGenerator.internalError(error.errList.internalError.ERR_SELECT_QUERY_DISTRIBUTOR_CHANGE_PASSWORD_FAILURE);
+      const responseUnableToChange = responseGenerator.internalError(
+        error.errList.internalError.ERR_SELECT_QUERY_DISTRIBUTOR_CHANGE_PASSWORD_FAILURE,
+      );
       return res.status(400).send(responseUnableToChange);
     }
     if (rows.length) {
@@ -531,7 +538,9 @@ router.put(
         );
         return res.status(400).send(responseUnableToUpdateWithoutException);
       } catch (e) {
-        const responseUnableToUpdate = responseGenerator.internalError(error.errList.internalError.ERR_DISTRIBUTOR_CHANGE_PASSWORD_FAILURE_UPDATE_QUERY);
+        const responseUnableToUpdate = responseGenerator.internalError(
+          error.errList.internalError.ERR_DISTRIBUTOR_CHANGE_PASSWORD_FAILURE_UPDATE_QUERY,
+        );
         return res.status(400).send(responseUnableToUpdate);
       }
     } else {
@@ -854,11 +863,7 @@ router.post('/profile/image/upload', auth.protectTokenVerify, async (req, res) =
       const filePath = constant.distributorImageStorageBaseLocation.PATH + req.file.filename;
       // console.log(filePath);
       try {
-        const [rows] = await pool.execute('UPDATE distributor SET dist_image = ?  WHERE dist_id = ?', [
-          filePath,
-          req.user.id,
-          req.user.cid,
-        ]);
+        const [rows] = await pool.execute('UPDATE distributor SET dist_image = ?  WHERE dist_id = ?', [filePath, req.user.id, req.user.cid]);
         if (rows.affectedRows !== 1) {
           const errDistImageUploadUpdateDBNoUpdateNOExp = error.errList.internalError.ERR_EMP_IMG_UPLOAD_DB_UPDATE_NO_UPDATE_NO_EXCEPTION;
           return res.status(404).send(responseGenerator.internalError(errDistImageUploadUpdateDBNoUpdateNOExp));

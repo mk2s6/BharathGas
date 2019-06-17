@@ -7364,7 +7364,7 @@ body.boxed {
 
 .header_mainmenu {
 	overflow: visible;
-	width: 10000px;
+	width: auto;
 	padding: 0 150px;
 }
 
