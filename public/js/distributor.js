@@ -17,12 +17,9 @@ $(function () {
                 contentType: 'application/json',
                 data : JSON.stringify(loginDetails),
                 success : function (data, status, request) {
-                    // console.log(data);
                     alert(data.data.description);
-                    console.log(request.getResponseHeader('x-id-token'));
-                    token = 'x-id-token'
-                    localStorage.token = request.getResponseHeader('x-id-token');
-                    console.log(localStorage);
+                    const token = 'x-id-token'
+                    localStorage[token] = request.getResponseHeader('x-id-token');
                 }, 
                 error : function (e, ts, et) {
                         console.log("some error" + ts + et);
