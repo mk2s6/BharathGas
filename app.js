@@ -37,6 +37,10 @@ const indexRouter = require('./routes/index');
 const locationRouter = require('./routes/location');
 const distributorRouter = require('./routes/distributor');
 const homeRouter = require('./routes/home');
+const salesRouter = require('./routes/salesofficer');
+const customerRouter = require('./routes/customer');
+const contactUsRouter = require('./routes/contact');
+
 
 const app = express();
 
@@ -116,6 +120,11 @@ app.use('/', homeRouter);
 app.use('/test', indexRouter);
 app.use('/location', locationRouter);
 app.use('/distributor', distributorRouter);
+app.use('/sales', salesRouter);
+app.use('/customer', customerRouter);
+app.use('/contactUs', contactUsRouter)
+
+
 // app.use('/notification', notificationRouter);
 
 /**

@@ -1,0 +1,56 @@
+{{> header }}
+{{> indexheader }}
+
+			<section class="page_breadcrumbs ds color parallax section_padding_top_20 section_padding_bottom_20">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12 text-center">
+							<h2 class="text-uppercase">Sales Officer Login</h2>
+						</div>
+					</div>
+				</div>
+			</section>
+
+   <form id="loginForm" name="form1" autocomplete="off">
+     <div class="col-md-4 col-md-offset-4" style="border: 1px solid black; border-radius: 10px" id="outer" align="center">
+		<table>
+				<tr>
+					<span class="input input--hoshi">
+					<input class="input__field input__field--hoshi" type="email" autocomplete="off" id="username" name="username" id="dis_email" required />
+					<label class="input__label input__label--hoshi input__label--hoshi-color-1" for="dis_email">
+						<span class="input__label-content input__label-content--hoshi">Username</span>
+					</label>
+				</span>
+				</tr>
+				<tr>
+				<span class="input input--hoshi">
+					<input class="input__field input__field--hoshi" type="password" autocomplete="off" id="password" name="password" id="dis_pass" required />
+					<label class="input__label input__label--hoshi input__label--hoshi-color-1" for="dis_pass">
+						<span class="input__label-content input__label-content--hoshi">Password</span>
+					</label>
+				</span>
+			</tr>
+				<tr>
+					<td colspan=2 align=center class="errors">
+						<div id="final">		
+							<input name="verify" id="submit" type="submit" value="Login">
+						</div>
+					</td>
+				</tr>
+				<br>
+			</table>
+	</div> 
+</form>
+
+<script src="js/sales.js"></script>
+<script src="js/classie.js"></script>
+<script src="js/stable.js"></script>
+<style>
+	footer {
+        position: fixed;
+		bottom: 0;!important;
+	}
+</style>
+
+
+{{> footer-end }}
