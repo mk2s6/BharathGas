@@ -10,8 +10,11 @@ const notification = require('../model/notification');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    console.log('hi');
-    res.render('index', {title : 'BharatGas'});
+  res.render('index');
+});
+
+router.get('/notfound', async (req, res) => {
+  res.render('error');
 });
 
 module.exports = router;
