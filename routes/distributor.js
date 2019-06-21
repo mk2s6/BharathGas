@@ -19,7 +19,7 @@ const router = express.Router();
  * Route for distributor home page
  * @name /distributor/
  */
-router.get('/', async (req, res) => res.render('distributorHome'));
+router.get('/',auth.protectTokenCheck, async (req, res) => res.render('distributorHome'));
 
 
 /**

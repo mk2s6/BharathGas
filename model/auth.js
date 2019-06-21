@@ -234,7 +234,7 @@ function protectTokenVerify(req, res, next) {
     if (req.user === null || req.user === undefined) {
       const payload = jwt.verify(token, jwtSecret);
       req.user = payload;
-      console.log(req.user);
+      // console.log(req.user);
       switch (req.user.role) {
         case 'Distributor':
           return res.redirect('/distributor');
@@ -243,6 +243,7 @@ function protectTokenVerify(req, res, next) {
         case 'deliveryAgent':
           return res.redirect('/deliveryAgent');
         default:
+          return res.redirect('/');
           break;
       }
       // return res.redirect()
@@ -250,7 +251,7 @@ function protectTokenVerify(req, res, next) {
     next();
     return 0; // We will not reach here but to avoid eslint error we have this
   }
-  next();
+  return next();
 }
 
 /**
