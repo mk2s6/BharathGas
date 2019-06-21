@@ -15,15 +15,20 @@ $(function () {
                 url: '/distributor/login',
                 type: 'POST',
                 contentType: 'application/json',
-                credentils: 'include',
                 data : JSON.stringify(loginDetails),
                 success : function (data, status, request) {
-                    // console.log(request);
-                    alert(data.data.description);
-                    const token = 'x-id-token'
-                    localStorage[token] = request.getResponseHeader('x-id-token');
-                    request.setRequestHeader(token, localStorage[token]);
-                    // window.location = '/distributor';
+
+                    if(typeof data === 'string'){ 
+                        window.location = '/';
+                     }
+                    else{
+                        alert(data.data.description);
+                        const token = 'x-id-token'
+                        localStorage[token] = request.getResponseHeader('x-id-token');
+                        request.setRequestHeader(token, localStorage[token]);
+                        window.location = '/';
+                    }
+
                 }, 
                 error : function (e, ts, et) {
                         console.log("some error" + ts + et);

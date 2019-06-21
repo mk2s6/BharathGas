@@ -1,11 +1,6 @@
 {{> header }}
 {{> distributorHeader }}
 
-<script type="text/javascript">
-    $(function () {
-        $(".dis_field").prop("disabled", true);
-    });
-</script>
 <section class="ls section_padding_top_30 section_padding_bottom_30">
     <div class="container">
         <div class="row">
@@ -116,13 +111,7 @@
             </div>
         </div>
 </section>
-<script type="text/javascript">
-    $(function () {
-        $("#sa_edit").click(function () {
-            $(".dis_field").prop("disabled", false);
-        });
-    });
-</script>
+
 <section class="ds color page_copyright section_padding_15 with_top_border_container">
     <div class="container">
         <div class="row">
@@ -133,5 +122,21 @@
     </div>
 </section>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        const fields = $(".dis_field");
+        fields.prop("disabled", true);
+
+        $("#sa_edit").click(function () 
+        {
+            {{!-- console.log(fields.attr("disabled")); --}}
+            if(fields.attr("disabled"))
+                fields.attr("disabled", false);
+            else
+                fields.attr("disabled", true)
+        });
+    });
+</script>
 
 {{> footer-end }}
