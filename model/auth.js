@@ -30,6 +30,12 @@ const error = require('./error');
 
 // TODO Take this from environment variable
 const jwtSecret = config.get('authJWT.secret');
+// Authentication and Session
+const passport = require('passport');
+// const LocalStrategy = require('passport-local').Strategy;
+// // This is capital L because its constructor
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 /**
  * Hash the given password. Before passing the password to this function
@@ -107,6 +113,54 @@ function genAuthTokenVerifyEmail(payload) {
 }
 
 /**
+ * function to extract user from the jwt using cookie
+ * 
+ */
+
+ function cookieExtractor(req){
+   let token = false;
+   console.log('hello');
+  console.log(req);
+   if(req && req.cookies)
+    token = req.cookies['x-id-token'];
+  return token;
+ }
+
+// function authPassportJwtStrategy(params) {
+  
+// }
+
+passport.use(new JwtStrategy({
+  // These are needed because front end will send token in 'x-id-token'
+  jwtFromRequest: (req) => cookieExtractor(req),
+  secretOrKey: jwtSecret,
+},
+async (payload, done) => {
+  // console.log('object');
+  // Here payload if actual payload form the JWT so we can access its object directly
+  console.log(payload);
+  // Find user specified in token
+  // This part is not needed it will make response slow and token can't be tampered with but
+  // This is needed only in the case if user deletes its account and then
+  // try to access protected routes in this case token may be valid as it is signed by
+  // us and not yet expired but the user is not exist in the DB.
+  // This can be mitigated by having /logout route which add the blacklist token into our DB
+  // and in frontend deletes the given token.
+  // For now I will no do DB query to check for user but instead I will just add user
+  // to req.user object by calling done() method.
+  // NOTE: I can also fetch additional data here and append it to req.user,
+  // this fetch must be from in memory DB and not persistent
+
+  // If user does not exist handle it.
+  // Here check if JWT is valid and not expired, if so redirect to login
+
+  // Otherwise return user to passport so that it can be added to req.user.
+  // Payload will be appended to req.user object
+  done(null, payload);
+}));
+
+
+/**
  * authentication middle ware to check token of verify the email
  *
  */
@@ -170,8 +224,7 @@ function protectResetPasswordRoute(req, res, next) {
  *
  */
 function protectTokenVerify(req, res, next) {
-  const token = req.header(constant.TOKEN_NAME);
-  console.log(req);
+  const token = req.cookies[constant.TOKEN_NAME];
   // Token exist in request
   if (token) {
     // Check whether we have earlier verified the token or not. If verified we have data
@@ -181,8 +234,9 @@ function protectTokenVerify(req, res, next) {
     if (req.user === null || req.user === undefined) {
       const payload = jwt.verify(token, jwtSecret);
       req.user = payload;
+      console.log(req.user);
       switch (req.user.role) {
-        case 'distributor':
+        case 'Distributor':
           return res.redirect('/distributor');
         case 'salesOfficer':
           return res.redirect('/salesOfficer');
@@ -206,8 +260,8 @@ function protectTokenVerify(req, res, next) {
  * @public
  */
 
-function protectEmployeeMgmtRoute(req, res, next) {
-  const token = req.header(constant.TOKEN_NAME);
+function protectTokenCheck(req, res, next) {
+  const token = req.cookies[constant.TOKEN_NAME];
   // Token exist in request
   if (token) {
     try {
@@ -233,9 +287,6 @@ function protectEmployeeMgmtRoute(req, res, next) {
       // is invalid here
       // console.log(req.user);
       // Invalid Role hence Not authorized
-      if (req.user[constant.permissionKey.EMPLOYEE_MANAGEMENT] !== 1 || req.user[constant.tokenType.KEY] !== constant.tokenType.value.EMPLOYEE) {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
-      }
       next();
       return 0; // We will not reach here but to avoid eslint error we have this
     } catch (e) {
@@ -249,6 +300,15 @@ function protectEmployeeMgmtRoute(req, res, next) {
     return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
   }
 }
+
+/**
+ * 
+ * passport auth verification
+ */
+
+ function protectPassportTokenVerify(req, res, next) {
+  passport.authenticate('jwt', {session: false});
+ }
 
 /**
  * Route protection middleware for enquiry management route. It checks authorization based
@@ -592,7 +652,7 @@ module.exports.protectResetPasswordRoute = protectResetPasswordRoute;
 module.exports.genAuthTokenVerifyEmail = genAuthTokenVerifyEmail;
 module.exports.verifyPassword = verifyPassword;
 module.exports.protectTokenVerify = protectTokenVerify;
-module.exports.protectEmployeeMgmtRoute = protectEmployeeMgmtRoute;
+module.exports.protectTokenCheck = protectTokenCheck;
 module.exports.protectEnquiryMgmtRoute = protectEnquiryMgmtRoute;
 module.exports.protectCompanySettingRoute = protectCompanySettingRoute;
 module.exports.protectBranchAccess = protectBranchAccess;
@@ -600,6 +660,7 @@ module.exports.protectBranchAccess = protectBranchAccess;
 // module.exports.protectLtTableUpdate = protectLtTableUpdate;
 module.exports.protectTestResetPasswordRoute = protectTestResetPasswordRoute;
 module.exports.protectEmployeeResetPasswordRoute = protectEmployeeResetPasswordRoute;
+module.exports.protectPassportTokenVerify = protectPassportTokenVerify;
 
 // ==============================
 // This code to be used when enabling passport for authentication.

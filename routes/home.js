@@ -6,6 +6,7 @@ const vs = require('../model/validator-sanitizer');
 const responseGenerator = require('../model/response-generator');
 const constant = require('../model/constant');
 const notification = require('../model/notification');
+const passport = require('passport')
 
 const router = express.Router();
 

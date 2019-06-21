@@ -28,7 +28,7 @@ const hbs = require('express-hbs');
 const responseGenerator = require('./model/response-generator');
 const constant = require('./model/constant');
 
-// const passport = require('passport');
+const passport = require('passport');
 
 /**
  * Require for Routing
@@ -98,7 +98,7 @@ app.use(express.static(`${__dirname}/src`));
 /**
  * Session and Authentication
  */
-// app.use(passport.initialize());
+app.use(passport.initialize());
 
 /**
  * View engine setup
