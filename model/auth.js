@@ -171,29 +171,32 @@ function protectResetPasswordRoute(req, res, next) {
  */
 function protectTokenVerify(req, res, next) {
   const token = req.header(constant.TOKEN_NAME);
+  console.log(req);
   // Token exist in request
   if (token) {
-    try {
-      // Check whether we have earlier verified the token or not. If verified we have data
-      // of JWT already in req.user object.
-      // If we have verified the payload is available in req.user hence we can directly
-      // use that otherwise we need to verify it first.
-      if (req.user === null || req.user === undefined) {
-        const payload = jwt.verify(token, jwtSecret);
-        req.user = payload;
+    // Check whether we have earlier verified the token or not. If verified we have data
+    // of JWT already in req.user object.
+    // If we have verified the payload is available in req.user hence we can directly
+    // use that otherwise we need to verify it first.
+    if (req.user === null || req.user === undefined) {
+      const payload = jwt.verify(token, jwtSecret);
+      req.user = payload;
+      switch (req.user.role) {
+        case 'distributor':
+          return res.redirect('/distributor');
+        case 'salesOfficer':
+          return res.redirect('/salesOfficer');
+        case 'deliveryAgent':
+          return res.redirect('/deliveryAgent');
+        default:
+          break;
       }
-      next();
-      return 0; // We will not reach here but to avoid eslint error we have this
-    } catch (e) {
-      console.log(e);
-      if (e.name === 'TokenExpiredError') {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
-      }
-      return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      // return res.redirect()
     }
-  } else {
-    return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    next();
+    return 0; // We will not reach here but to avoid eslint error we have this
   }
+  next();
 }
 
 /**

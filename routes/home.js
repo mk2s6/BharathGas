@@ -9,7 +9,7 @@ const notification = require('../model/notification');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', auth.protectTokenVerify, async (req, res) => {
   res.render('index');
 });
 

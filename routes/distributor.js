@@ -16,11 +16,17 @@ const multer = require('../model/multer');
 const router = express.Router();
 
 /**
+ * Route for distributor home page
+ * @name /distributor/
+ */
+router.get('/', async (req, res) => res.render('distributorHome'));
+
+
+/**
  * Route for distributor login page
  * @name /distributor/login
  */
 router.get('/login', async (req, res) => res.render('distributorLogin'));
-
 /**
  * route for company distributor login
  *
@@ -117,6 +123,7 @@ router.post(
         const responseStudentLoginUpdateQueryFailure = responseGenerator.dbError(error.errList.dbError.ERR_LOGIN_USER_UPDATE_IP_FAILURE);
         return res.status(500).send(responseStudentLoginUpdateQueryFailure);
       }
+      // req.header(constant.TOKEN_NAME, token);
       return res
         .status(200)
         .header(constant.TOKEN_NAME, token)
