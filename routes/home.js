@@ -14,9 +14,9 @@ router.get('/', auth.protectTokenVerify, async (req, res) => {
   return res.render('index');
 });
 
-router.get('/logout', auth.protectTokenCheck, async (req, res) => {
+router.post('/logout', auth.protectTokenCheck, async (req, res) => {
   res.clearCookie('x-id-token');
-  return res.status(200).send("<script> alert('You have been logged out successfully'); window.location = '/' </script>");
+  return res.send(responseGenerator.success('Logout', 'You have been logged out successfully',[]));
 });
 
 
