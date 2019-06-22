@@ -107,6 +107,17 @@ const errList = {
       message: 'Insertion not possible,  city with the given name already exists..!',
       internalDescription: 'Insertion of details of a city fails as  there is a duplicate entry with the same name',
     },
+    ERR_LOGIN_USER_UPDATE_IP_FAILURE: {
+      code: '30010',
+      message: errMsg.DATABASE_ERROR,
+      internalDescription: 'There was an error in updating the IP of the login in the employee table',
+    },
+    ERR_CUSTOMER_ADD_DETAILS_EXISTS: {
+      code: '30011',
+      message: 'Employee with the given email-id or mobile number in the company already exists!',
+      internalDescription: `Insertion of details of a employee fails,
+       there is a duplicate entry with the same details`,
+    },
   },
 
   //
@@ -195,6 +206,26 @@ const errList = {
       code: '50014',
       message: errMsg.INTERNAL_SERVER_ERROR,
       internalDescription: 'there is an error while selecting the list of cities from the database',
+    },
+    ERR_AUTH_TOKEN_GENERATION_ERROR: {
+      code: '50015',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'Token generation failed in the requested route',
+    },
+    ERR_GET_CONNECTION_FROM_POOL_FAILURE: {
+      code: '50016',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'There may be any error in the getting the connection object from connection pool',
+    },
+    ERR_BEGIN_TRANSACTION_FAILURE: {
+      code: '50017',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'There is an error while beginning the transaction',
+    },
+    ERR_COMMIT_TRANSACTION_FAILURE: {
+      code: '50018',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'There is an error while committing the transaction',
     },
   },
 };

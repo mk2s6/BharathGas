@@ -812,6 +812,15 @@ function isValidPastDateTodayNotAllowed(location, date) {
     .withMessage('Please specify valid date in past. Today is not allowed.');
 }
 
+/**
+ * Validator to check whether the omc is valid or not
+ * @param {omc} object 
+ */
+function isValidOMC(location, omc) {
+  const validator = getFunctionName(location);
+  return validator(omc).isIn(constant.omc).withMessage("Please select a valid OMC");
+}
+
 // ======================================================================
 // API RELATED TO VALIDATION RESULT OBJECT
 // ======================================================================
@@ -897,3 +906,4 @@ module.exports.isValidPastDateTodayNotAllowed = isValidPastDateTodayNotAllowed;
 module.exports.isValidPastDateTodayAllowed = isValidPastDateTodayAllowed;
 module.exports.trim = trim;
 module.exports.removeSpaces = removeSpaces;
+module.exports.isValidOMC = isValidOMC;

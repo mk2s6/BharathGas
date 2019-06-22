@@ -92,11 +92,13 @@
                                 <div class="form-group">
                                     <div class="col-md-2"></div>
                                     <div class="col-md-8">
-                                        <input type="text" name="c_pass" class="form-control" id="c_pass"
+                                        <input type="password" name="ui_current_password" class="form-control" id="ui_current_password"
                                             placeholder="Current Password" required>
-                                        <input type="text" name="n_pass" style="margin-top:15px;" class="form-control"
-                                            id="n_pass" placeholder="New Password" required>
-                                        <button type="submit" style="margin-top:15px;" name="quick_apply"
+                                        <input type="password" name="ui_new_password" style="margin-top:15px;" class="form-control"
+                                            id="ui_new_password" placeholder="New Password" required>
+                                        <input type="password" name="ui_re_new_password" style="margin-top:15px;" class="form-control"
+                                            id="ui_re_new_password" placeholder="Re-Enter New Password" required>
+                                        <button type="button" style="margin-top:15px;" name="quick_apply"
                                             class="btn btn-primary pull-right">Change Password</button>
                                     </div>
                                 </div>
@@ -111,27 +113,14 @@
             </div>
         </div>
 </section>
-
-<section class="ds color page_copyright section_padding_15 with_top_border_container">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <p class="small-text big">&copy; Copyright 2019. All Rights Reserved.</p>
-            </div>
-        </div>
-    </div>
-</section>
-</div>
-
 <script type="text/javascript">
     $(function () {
         const fields = $(".dis_field");
         fields.prop("disabled", true);
 
-        $("#sa_edit").click(function () 
-        {
-            {{!-- console.log(fields.attr("disabled")); --}}
-            if(fields.attr("disabled"))
+        $("#sa_edit").click(function () {
+            { { !--console.log(fields.attr("disabled")); --} }
+            if (fields.attr("disabled"))
                 fields.attr("disabled", false);
             else
                 fields.attr("disabled", true)

@@ -120,8 +120,8 @@ const passwordValidatorResponses = {
   EMPLOYEE_LOGIN_PWD_RESPONSE: 'Please enter a valid password',
   EMPLOYEE_REGISTER_PASSWORD_RESPONSE: `Password should contain uppercase character, lowercase character,
   number and symbol. It must be at least 8 characters long. It should not contain any spaces in it!`,
-  COMPANY_EMPLOYEE_LOGIN_PWD_RESPONSE: 'Please enter a valid password',
-  COMPANY_EMPLOYEE_REGISTER_PASSWORD_RESPONSE: `Password should contain at least 1 uppercase,
+  COMPANY_DISTRIBUTOR_LOGIN_PWD_RESPONSE: 'Please enter a valid password',
+  COMPANY_DISTRIBUTOR_REGISTER_PASSWORD_RESPONSE: `Password should contain at least 1 uppercase,
   1 lowercase, 1 symbol and 1 number. It must be at least 8 characters long. It should not contain any spaces in it!`,
 };
 
@@ -254,6 +254,8 @@ const employeeImageStorageBaseLocation = {
   PATH: '/img/profile/emp/',
 };
 
+const omc = ['BPC', 'HPC', 'IOC', 'Go Gas', 'Super Gas', 'Total Gas', 'Others'];
+
 module.exports.errType = errType;
 module.exports.defaultEmpImages = defaultEmpImages;
 module.exports.defaultCompImages = defaultCompImages;
@@ -284,3 +286,4 @@ module.exports.userFilterTypes = userFilterTypes;
 module.exports.empRoleListTypes = empRoleListTypes;
 module.exports.testTimeout = testTimeout;
 module.exports.employeeImageStorageBaseLocation = employeeImageStorageBaseLocation;
+module.exports.omc = omc;

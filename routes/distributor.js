@@ -82,7 +82,7 @@ router.post(
         return res.status(400).send(responseUnableToCompareHash);
       }
       if (!isValidPassword) {
-        const responsePasswordNoMatch = responseGenerator.dbError(error.errList.dbError.ERR_LOGIN_DISTRIBUTOR_PASSWORD_NO_MATCH);
+        const responsePasswordNoMatch = responseGenerator.dbError(error.errList.dbError.ERR_LOGIN_USER_PASSWORD_NO_MATCH);
         return res.status(400).send(responsePasswordNoMatch);
       }
 
@@ -894,4 +894,12 @@ router.post('/profile/image/upload', auth.protectTokenVerify, async (req, res) =
     }
   });
 });
+
+/**
+ * route to view of register a sales officer
+ * 
+ * @name /distributor/register/salesOfficer
+ */
+router.get('/register/salesOfficer', auth.protectTokenCheck, async(req, res) => { res.render('salesOfficerRegistration');
+})
 module.exports = router;

@@ -245,3 +245,44 @@ router.post(
 // });
 
 module.exports = router;
+
+
+/////////////////////////////////////////////////////////////////////
+////            Transaction helper
+/////////////////////////////////////////////////////////////////////
+// let conn;
+// try {
+//   conn = await pool.getConnection();
+// } catch (e) {
+//   const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_GET_CONNECTION_FROM_POOL_FAILURE;
+//   return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
+// }
+//
+// // Variables for results
+// let followUpCommentInsert;
+// let followUpEnqUpdate;
+//
+// // Begin Transaction
+// try {
+//   await conn.beginTransaction();
+// } catch (e) {
+//   // Begin transaction failure
+//   console.log(e);
+//   await conn.rollback();
+//   await conn.release();
+//   const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_BEGIN_TRANSACTION_FAILURE;
+//   return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
+// }
+//
+// // Final commit and release the connection after the final commit
+// try {
+//   await conn.commit();
+//   await conn.release();
+//   // await conn.query('ROLLBACK');
+// } catch (e) {
+//   await conn.rollback();
+//   await conn.release();
+//   const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_COMMIT_TRANSACTION_FAILURE;
+//   return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
+// }
+//////////////////////////////////////////////////////////////////////////////////

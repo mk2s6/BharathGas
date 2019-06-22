@@ -44,7 +44,7 @@ const contactUsRouter = require('./routes/contact');
 
 const app = express();
 
-if (config.get('logging') === 'true') {
+if (config.get('logging') === 'true' && config.get('environment') === 'development') {
   app.use(logger('dev'));
 }
 
@@ -151,8 +151,8 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  // res.redirect('/notfound');
-  res.send(responseGenerator.errorResponse('Not Found', err.status, 'Resource you are trying to access is not found', '', req.url));
+  res.redirect('/notfound');
+  // res.send(responseGenerator.errorResponse('Not Found', err.status, 'Resource you are trying to access is not found', '', req.url));
 });
 
 module.exports = app;

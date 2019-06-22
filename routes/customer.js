@@ -21,5 +21,167 @@ const router = express.Router();
  */
 router.get('/login', async (req, res) => res.render('customerLogin'));
 
+/**
+ * @name /customer/add/new
+ */
+router.get('/add/new', auth.protectTokenCheck, async (req, res) => {
+  res.render('customerRegistration');
+});
+
+/**
+ * @name /customer/add/new
+ */
+router.post(
+  '/add/new',
+  auth.protectTokenCheck,
+  [
+    vs.isValidStrLenWithTrim('body', 'ui_business_name', 3, 100, 'Please enter a valid business name between 3 to 100 characters'),
+    vs.isValidStrLenWithTrim('body', 'ui_proprietor_name', 3, 50, 'Please enter a valid proprietor name between 3 to 50 characters'),
+    vs.isMobile('body', 'ui_mobile'),
+    vs.ifExistIsEmail('body', 'ui_email'),
+    vs.isValidOMC('body', 'ui_omc'),
+    vs.isValidStrLenWithTrim('body', 'ui_address', 3, 100, 'Please enter address name between 3 to 100 characters'),
+    vs.ifExistIsMobile('body', 'ui_secondary_mobile', 3, 50, 'Please enter a valid proprietor name between 3 to 50 characters'),
+    vs.isValidStrLenWithTrim('body', 'ui_city', 3, 50, 'Please select a valid city'),
+    vs.isValidStrLenWithTrim('body', 'ui_state', 3, 50, 'Please select a valid state'),
+    vs.isValidStrLenWithTrim('body', 'ui_country', 3, 50, 'Please select a valid country'),
+    vs.isNumeric('body', 'ui_pincode', 'Please enter a valid pincode'),
+    vs.isExactLenWithTrim('body', 'ui_pincode', 6, 'Pincode should be of 6 digits'),
+    vs.isValidStrLenWithTrim('body', 'ui_feedback', 15, 2000, 'Please enter a valid feedback between 15 to 2000 characters'),
+  ],
+  async (req, res) => {
+    const errors = vs.getValidationResult(req);
+    if (!errors.isEmpty()) {
+      const fieldsToValidate = [
+        'ui_business_name',
+        'ui_proprietor_name',
+        'ui_mobile',
+        'ui_email',
+        'ui_omc',
+        'ui_address',
+        'ui_secondary_mobile',
+        'ui_city',
+        'ui_state',
+        'ui_country',
+        'ui_pincode',
+        'ui_feedback',
+      ];
+      // This is if else so we don't need return
+      return res.status(422).send(responseGenerator.validationError(errors.mapped(), fieldsToValidate));
+    }
+    const custIdPrefix = 'CUSTSK0';
+    const defaultPwd = 'Qwerty12';
+          const bePassword = defaultPwd;
+      let beHashedPassword = '';
+      try {
+        // NOTE We need to await this function as it is async
+        beHashedPassword = await hash.hashPassword(bePassword);
+      } catch (e) {
+        // Unable to hash Password
+        const responseUnableToHash = responseGenerator.internalError(error.errList.internalError.ERR_HASH_PASSWORD);
+        return res.status(500).send(responseUnableToHash);
+      }
+    let conn;
+    try {
+      conn = await pool.getConnection();
+    } catch (e) {
+      const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_GET_CONNECTION_FROM_POOL_FAILURE;
+      return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
+    }
+
+    // Variables for results
+    let customerId;
+    let customerInsert;
+    let customerBusinessDetails;
+
+    // Begin Transaction
+    try {
+      await conn.beginTransaction();
+    } catch (e) {
+      // Begin transaction failure
+      console.log(e);
+      await conn.rollback();
+      await conn.release();
+      const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_BEGIN_TRANSACTION_FAILURE;
+      return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
+    }
+
+    try {
+      [customerId] = await conn.query('SELECT MAX(TRIM(LEADING ? FROM cust_id)) AS max FROM customer', [custIdPrefix]);
+      // console.log(customerId[0].max + 1);
+    } catch (e) { 
+      console.log(e);
+    }
+    const custId = custIdPrefix + pad(parseInt(customerId[0].max) + 1, 3);
+    // console.log(custId);
+
+    try {
+      [customerInsert] = await conn.query(
+        `INSERT INTO customer(cust_id, cust_name, cust_business_name, cust_remarks, cust_email,
+              cust_primary_mobile, cust_pwd, cust_secondary_mobile, cust_address, cust_city, cust_state, cust_country, cust_pincode, cust_last_login_IP) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          custId,
+          req.body.ui_proprietor_name,
+          req.body.ui_business_name,
+          req.body.ui_feedback,
+          req.body.ui_email,
+          req.body.ui_mobile,
+          beHashedPassword,
+          req.body.ui_secondary_mobile,
+          req.body.ui_address,
+          req.body.ui_city,
+          req.body.ui_state,
+          req.body.ui_country,
+          req.body.ui_pincode,
+          req.ip
+        ],
+      );
+    } catch (e) {
+      console.log(e);
+      if (e.code === 'ER_DUP_ENTRY') {
+        const beCustomerDetailsAlreadyExist = error.errList.dbError.ERR_CUSTOMER_ADD_DETAILS_EXISTS;
+        return res.status(400).send(responseGenerator.dbError(beCustomerDetailsAlreadyExist));
+      }
+      const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_COMMIT_TRANSACTION_FAILURE;
+      return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
+    }
+
+    // Final commit and release the connection after the final commit
+    try {
+      await conn.commit();
+      await conn.release();
+      // await conn.query('ROLLBACK');
+    } catch (e) {
+      await conn.rollback();
+      await conn.release();
+      const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_COMMIT_TRANSACTION_FAILURE;
+      return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
+    }
+    return res.status(200).send(responseGenerator.success('Customer addition', 'Customer added successfully', [{
+      customerId: custId,
+      businessName: req.body.ui_proprietor_name,
+      proprietorName: req.body.ui_business_name, 
+      feedback: req.body.ui_feedback, 
+      email: req.body.ui_email,
+      mobile: req.body.ui_mobile,
+      secondaryMobile: req.body.ui_secondary_mobile,
+      address: req.body.ui_address,
+      city: req.body.ui_city,
+      state: req.body.ui_state,
+      country: req.body.ui_country,
+      address: req.body.ui_pincode,
+    }]))
+  },
+);
+
+function pad(number, length) {
+  let str = `${number}`;
+  while (str.length < length) {
+    str = `0${str}`;
+  }
+
+  return str;
+}
 
 module.exports = router;
