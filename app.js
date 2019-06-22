@@ -151,7 +151,7 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.redirect('/notfound');
+  res.status(err.status || 500).render('error');
   // res.send(responseGenerator.errorResponse('Not Found', err.status, 'Resource you are trying to access is not found', '', req.url));
 });
 

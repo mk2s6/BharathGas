@@ -54,7 +54,6 @@ console.log(data);
       data,
       dataType: 'json',
       success(response) {
-        // console.log('success');
         alert(response.data.description);
         window.location = '/';
       },

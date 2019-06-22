@@ -833,6 +833,8 @@ router.get('/profile', auth.protectTokenCheck, async (req, res) => {
     `,
       [req.user.id],
     );
+    console.log(req.user);
+    console.log(rows);
     if (rows.length !== 1) {
       const beUserDetailsNotFound = responseGenerator.dbError(error.errList.dbError.ERR_DISTRIBUTOR_PROFILE_NOT_FOUND);
       return res.status(404).send(beUserDetailsNotFound);

@@ -1,0 +1,54 @@
+{{> header}}
+{{> distributorHeader}}
+<section>
+	{{!-- <template> --}}
+	<section class="page_breadcrumbs ds color parallax section_padding_top_20 section_padding_bottom_20">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 text-center">
+					<h2 class="text-uppercase" id="ui_title"></h2>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section style="padding-top: 30px;">
+		{{!-- <form action="" method="post" enctype="multipart/form-data"> --}}
+		<div class="container">
+			<h6 style="display:inline;">Proprietor : &nbsp;</h6> <span id="ui_proprietor_name"></span>
+			<hr>
+			<h6 style="display:inline;">E-mail : &nbsp;</h6> <span id="ui_email"></span>
+			<hr>
+			<h6 style="display:inline;">Mobile : &nbsp;</h6> <span id="ui_primary_mobile"></span>, &nbsp; <span
+				id="ui_secondary_mobile"></span>
+			<hr>
+			<h6 style="display:inline;">OMC : &nbsp;</h6> <span id="ui_omc"></span>
+			<hr>
+			<p style="align:justify" class="condensedlines" id="ui_feedback">
+			</p>
+			<hr>
+			<h6 style="display:inline;">Registered by : &nbsp;</h6> <span id="ui_sales_officer"></span>
+			<hr>
+			<h6>Address :</h6>
+			<p id="ui_address"></p>
+			<hr>
+			<h6 style="display:inline;">City : &nbsp;</h6> <span id="ui_city"></span>
+			<hr>
+			<h6 style="display:inline;">State :&nbsp;</h6><span id="ui_state"></span>
+			<hr>
+			<h6 style="display:inline;">Pin Code : &nbsp;</h6> <span id="ui_pincode"></span>
+			<hr>
+			<h6 style="display:inline;">Country : &nbsp;</h6> <span id="ui_country"></span>
+			<hr>
+		</div>
+		<div align="center" style="margin-bottom:20px; "></div>
+		<div align="center" class="container" style="margin-bottom:20px;">
+			<input style="border-radius:5px; padding:7px;" type="submit" name="submit" value="Locate Address"
+				class="col-md-offset-3 col-md-2" />
+		</div>
+		{{!-- </form> --}}
+	</section>
+	{{!-- </template> --}}
+</section>
+<script src="js/mustache.js"></script>
+<script src="js/customerDetails.js"></script>
+{{> footer-end}}
