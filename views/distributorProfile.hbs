@@ -41,11 +41,11 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-group address-field validate-required" id="sales_city_field"> <label
-                            for="sales_city" class="control-label">
-                            <span class="grey">Town / City:</span>
-                        </label> <input type="text" class="form-control dis_field" name="sales_city" id="sales_city"
-                            placeholder="" value="{{city}}" disabled>
+                    <div class="form-group"> <label for="ui_city" class="control-label">
+                            <span class="grey">City/Town:</span></label>
+                        <select class="form-control dis_field" name="ui_city" id="ui_city" disabled>
+                            <option value="{{city}}" selected="selected">{{city}}</option>
+                        </select>
                     </div>
                     <div class="form-group"> <label for="sales_state" class="control-label">
                             <span class="grey">State/Province:</span></label>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12">
-                    <button type="button" id="sa_edit" class="theme_button wide_button color1 topmargin_40">Edit
+                    <button type="button" id="dist_edit" class="theme_button wide_button color1 topmargin_40">Edit
                         Details</button>
                     <button type="submit" class="theme_button wide_button">Update Details</button>
                     <button type="button" data-toggle="modal" data-target="#myModal" id="sa_upass"
@@ -118,7 +118,7 @@
         const fields = $(".dis_field");
         fields.prop("disabled", true);
 
-        $("#sa_edit").click(function () {
+        $("#dist_edit").click(function () {
             { { !--console.log(fields.attr("disabled")); --} }
             if (fields.attr("disabled"))
                 fields.attr("disabled", false);

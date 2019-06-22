@@ -40,9 +40,14 @@ $(() => {
       async: false,
       url: '/customer/list/all',
       success(response) {
-        //   console.log(response);
-        alert(response.data.description);
-        display(response.data.items);
+          console.log(response);
+          if (response.data.items.length === 0) {
+            alert('Customer does not exist please provide valid details');
+            window.history.back();
+          } else{
+            alert(response.data.description);
+            display(response.data.items);
+          }
       },
       error(e) {
         alert(e.responseJSON.message);

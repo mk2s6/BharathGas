@@ -239,7 +239,7 @@ function protectTokenVerify(req, res, next) {
         case 'Distributor':
           return res.redirect('/distributor');
         case 'salesOfficer':
-          return res.redirect('/salesOfficer');
+          return res.redirect('/sales');
         case 'deliveryAgent':
           return res.redirect('/deliveryAgent');
         default:

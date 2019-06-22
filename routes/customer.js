@@ -208,7 +208,7 @@ router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
       FROM customer `,
       [custIdPrefix],
     );
-    // console.log(rows);
+    console.log(rows);
     return res.status(200).send(responseGenerator.success('customer list', 'Customer list retrieved successfully', rows));
   } catch (e) {
     console.log(e);

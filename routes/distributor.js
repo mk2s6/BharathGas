@@ -19,14 +19,14 @@ const router = express.Router();
  * Route for distributor home page
  * @name /distributor/
  */
-router.get('/',auth.protectTokenCheck, async (req, res) => res.render('distributorHome'));
-
+router.get('/', auth.protectTokenCheck, async (req, res) => res.render('distributorHome'));
 
 /**
  * Route for distributor login page
  * @name /distributor/login
  */
-router.get('/login',   auth.protectTokenVerify,async (req, res) => res.render('distributorLogin'));
+router.get('/login', auth.protectTokenVerify, async (req, res) => res.render('distributorLogin'));
+
 /**
  * route for company distributor login
  *
@@ -124,21 +124,14 @@ router.post(
         const responseStudentLoginUpdateQueryFailure = responseGenerator.dbError(error.errList.dbError.ERR_LOGIN_USER_UPDATE_IP_FAILURE);
         return res.status(500).send(responseStudentLoginUpdateQueryFailure);
       }
-      // req.login(token, {session: false}, (error) => {
-      //   if (error) {
-      //     res.status(400).send({ error });
-      //   }
-      // req.header(constant.TOKEN_NAME, token);
-      // res
-      // console.log(res.cookie());
       res.cookie('x-id-token', token, { httpOnly: true });
       // res
       return res
         .status(200)
         .header(constant.TOKEN_NAME, token)
         .send(responseGenerator.success('login', 'Login Successful!!!', items));
-    // });
-  }
+      // });
+    }
     // Distributor does not exist in DB
     const responseCompDistributorNotExist = responseGenerator.dbError(error.errList.dbError.ERR_COMPANY_DISTRIBUTOR_LOGIN_DISTRIBUTOR_DOES_NOT_EXIST);
     return res.status(405).send(responseCompDistributorNotExist);
@@ -827,7 +820,7 @@ router.get('/profile', auth.protectTokenCheck, async (req, res) => {
       `
       SELECT dist_name AS name , dist_email AS email, dist_primary_mobile AS primaryMobile, 
                 dist_address AS address, dist_city AS city, dist_state AS state, dist_country AS country, 
-                dist_pincode AS pincode, dist_secondary_mobile AS secondaryMobile, dist_remarks AS feedback
+                dist_pincode AS pincode, dist_secondary_mobile AS secondaryMobile
         FROM distributor
         WHERE dist_id = ?   
     `,
@@ -839,9 +832,19 @@ router.get('/profile', auth.protectTokenCheck, async (req, res) => {
       const beUserDetailsNotFound = responseGenerator.dbError(error.errList.dbError.ERR_DISTRIBUTOR_PROFILE_NOT_FOUND);
       return res.status(404).send(beUserDetailsNotFound);
     }
-    const description = 'Distributor profile details fetched successfully';
+    // const description = 'Distributor profile details fetched successfully';
     // return res.status(200).send(responseGenerator.success('Distributor Profile', description, rows));
-    return res.render('distributorProfile', {name: rows[0].name, email: rows[0].email, primaryMobile: rows[0].primaryMobile, address: rows[0].address, city: rows[0].city, state: rows[0].state, country: rows[0].country, pin: rows[0].pincode, secondaryMobile: rows[0].secondaryMobile })
+    return res.render('distributorProfile', {
+      name: rows[0].name,
+      email: rows[0].email,
+      primaryMobile: rows[0].primaryMobile,
+      address: rows[0].address,
+      city: rows[0].city,
+      state: rows[0].state,
+      country: rows[0].country,
+      pin: rows[0].pincode,
+      secondaryMobile: rows[0].secondaryMobile
+    });
   } catch (e) {
     console.log(e);
     const beDistributorProfileError = responseGenerator.dbError(error.errList.dbError.ERR_DISTRIBUTOR_PROFILE_SELECT_ERROR);
@@ -899,9 +902,10 @@ router.post('/profile/image/upload', auth.protectTokenVerify, async (req, res) =
 
 /**
  * route to view of register a sales officer
- * 
+ *
  * @name /distributor/register/salesOfficer
  */
-router.get('/register/salesOfficer', auth.protectTokenCheck, async(req, res) => { res.render('salesOfficerRegistration');
-})
+router.get('/register/salesOfficer', auth.protectTokenCheck, async (req, res) => {
+  res.render('salesOfficerRegistration');
+});
 module.exports = router;
