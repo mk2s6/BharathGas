@@ -330,6 +330,7 @@ function protectPassportTokenVerify(req, res, next) {
 function protectDistributorAccess(req, res, next) {
   const token = req.cookies[constant.TOKEN_NAME];
   // Token exist in request
+  // console.log(token);
   if (token) {
     try {
       // Check whether we have earlier verified the token or not. If verified we have data
@@ -353,7 +354,7 @@ function protectDistributorAccess(req, res, next) {
       // is invalid here
       // console.log(payload);
       // Invalid Role hence Not authorized
-      if (req.user[constant.permissionKey.DISTRIBUTOR] !== 1 || req.user[constant.tokenType.KEY] !== constant.tokenType.value.DISTRIBUTOR) {
+      if (req.user[constant.permissionKey.DISTRIBUTOR] !== true || req.user[constant.tokenType.KEY] !== constant.tokenType.value.DISTRIBUTOR) {
         // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
         return res.status(403).render('403');
       }
@@ -400,10 +401,7 @@ function protectSalesAccess(req, res, next) {
       // is invalid here
       // console.log(payload);
       // Invalid Role hence Not authorized
-      if (
-        req.user[constant.permissionKey.SALES_OFFICER] !== 1
-        || req.user[constant.tokenType.KEY] !== constant.tokenType.value.SALES_OFFICER
-      ) {
+      if (req.user[constant.permissionKey.SALES_OFFICER] !== true || req.user[constant.tokenType.KEY] !== constant.tokenType.value.SALES_OFFICER) {
         // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
         return res.status(403).render('403');
       }
@@ -450,10 +448,7 @@ function protectDeliveryAccess(req, res, next) {
       // is invalid here
       // console.log(payload);
       // Invalid Role hence Not authorized
-      if (
-        req.user[constant.permissionKey.DELIVERY] !== 1
-        || req.user[constant.tokenType.KEY] !== constant.tokenType.value.DELIVERY
-      ) {
+      if (req.user[constant.permissionKey.DELIVERY] !== true || req.user[constant.tokenType.KEY] !== constant.tokenType.value.DELIVERY) {
         // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
         return res.status(403).render('403');
       }
@@ -472,7 +467,6 @@ function protectDeliveryAccess(req, res, next) {
     return res.status(403).render('403');
   }
 }
-
 
 /**
  * This middle ware is used to protect access to the branch information from the user
