@@ -53,7 +53,7 @@ const defaultFSJEmpRoles = {
  */
 const defaultRoles = {
   DISTRIBUTOR: 'Distributor',
-  SALES_OFFICER: 'Sales Officer',
+  SALES_OFFICER: 'SalesOfficer',
   DELIVERY: 'Delivery',
   CUSTOMER: 'Customer',
 };

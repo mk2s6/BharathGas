@@ -143,7 +143,7 @@ router.post(
       [customerInsert] = await conn.query(
         `INSERT INTO customer(cust_id, cust_name, cust_business_name, cust_remarks, cust_email, cust_loc_lat, cust_loc_lon,
               cust_primary_mobile, cust_pwd, cust_secondary_mobile, cust_address, cust_city, 
-              cust_state, cust_country, cust_pincode, cust_last_login_IP) 
+              cust_state, cust_country, cust_pincode, cust_last_login_IP, cust_added_by, cust_added_by_name, cust_added_by_type) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           custId,
@@ -162,6 +162,9 @@ router.post(
           req.body.ui_country,
           req.body.ui_pincode,
           req.ip,
+          req.user.id,
+          req.user.name,
+          req.user.role,
         ],
       );
     } catch (e) {
