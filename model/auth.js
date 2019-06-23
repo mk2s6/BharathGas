@@ -328,7 +328,7 @@ function protectPassportTokenVerify(req, res, next) {
  */
 
 function protectDistributorAccess(req, res, next) {
-  const token = req.header(constant.TOKEN_NAME);
+  const token = req.cookies[constant.TOKEN_NAME];
   // Token exist in request
   if (token) {
     try {
@@ -375,7 +375,7 @@ function protectDistributorAccess(req, res, next) {
 
 function protectSalesAccess(req, res, next) {
   // console.log(req);
-  const token = req.header(constant.TOKEN_NAME);
+  const token = req.cookies[constant.TOKEN_NAME];
   // Token exist in request
   if (token) {
     try {
@@ -425,7 +425,7 @@ function protectSalesAccess(req, res, next) {
 
 function protectDeliveryAccess(req, res, next) {
   // console.log(req);
-  const token = req.header(constant.TOKEN_NAME);
+  const token = req.cookies[constant.TOKEN_NAME];
   // Token exist in request
   if (token) {
     try {
@@ -484,7 +484,7 @@ function protectDeliveryAccess(req, res, next) {
  */
 function protectBranchAccess(req, res, branchArray) {
   // return (req, res) => {
-  const token = req.header(constant.TOKEN_NAME);
+  const token = req.cookies[constant.TOKEN_NAME];
   // Token exist in request
   // console.log(branchArray);
   // console.log(req.user);
@@ -536,7 +536,7 @@ function protectBranchAccess(req, res, branchArray) {
 }
 
 // function protectLtTableUpdate(req, res, next) {
-//   const token = req.header(constant.TOKEN_NAME);
+//   const token = req.cookies[constant.TOKEN_NAME];
 //   // Token exist in request
 //   if (token) {
 //     try {
@@ -591,7 +591,7 @@ function protectBranchAccess(req, res, branchArray) {
 // }
 
 // function protectFSJEmpRoute(req, res, next) {
-//   const token = req.header(constant.TOKEN_NAME);
+//   const token = req.cookies[constant.TOKEN_NAME];
 //   // Token exist in request
 //   if (token) {
 //     try {
