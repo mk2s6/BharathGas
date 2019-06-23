@@ -209,7 +209,17 @@ function pad(number, length) {
  * Route to list customers
  */
 router.get('/list', auth.protectTokenCheck, async (req, res) => {
-  res.render('customerList');
+  // console.log(req.user.role);
+  switch (req.user.role) {
+    case 'distributor':
+      return res.render('customerList');
+    case 'salesOfficer':
+      return res.render('customerListSales');
+      case 'delivery':
+        return res.render('customerListDelivery');
+    default:
+      return res.status(403).render(error);
+  }
 });
 
 /**
@@ -224,7 +234,7 @@ router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
       FROM customer `,
       [custIdPrefix],
     );
-    console.log(rows);
+    // console.log(rows);
     return res.status(200).send(responseGenerator.success('customer list', 'Customer list retrieved successfully', rows));
   } catch (e) {
     console.log(e);
@@ -236,7 +246,18 @@ router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
  * @name /customer/details
  *
  */
-router.get('/details', auth.protectTokenCheck, async (req, res) => res.render('customerDetails'));
+router.get('/details', auth.protectTokenCheck, async (req, res) => {
+  switch (req.user.role) {
+    case 'distributor':
+      return res.render('customerDetails');
+    case 'salesOfficer':
+      return res.render('customerDetailsSales');
+      case 'delivery':
+        return res.render('customerDetailsDelivery');
+    default:
+      return res.status(403).render(error);
+  }
+});
 
 /**
  * Route to get the details of a customer

@@ -236,7 +236,7 @@ function protectTokenVerify(req, res, next) {
       req.user = payload;
       // console.log(req.user);
       switch (req.user.role) {
-        case 'Distributor':
+        case 'distributor':
           return res.redirect('/distributor');
         case 'salesOfficer':
           return res.redirect('/sales');
