@@ -127,6 +127,59 @@ Border colors for elements in color section: rgba(255, 255, 255, 0.2)
 ** Bootstrap Overrides
 */
 /* columns with 20 and 40 percents width */
+#outer
+	{
+		
+		padding: 10px; 
+		background-color:white; 
+		border: 1px solid black;
+		border-radius: 8px;
+		-webkit-transition-duration: 0.4s; /* Safari */
+		transition-duration: 0.4s;
+	}
+	input{
+		border-radius:5px;
+	padding:3px;
+		-webkit-transition-duration: 0.4s; /* Safari */
+		transition-duration: 0.4s;
+	}
+	form
+	{
+		color:black;
+	}
+	#final
+	{
+		text-align:center; 
+		display:inline; 
+		padding-right:2em;	
+	}
+	#submit
+	{
+	 background-color: white; 
+    color: black; 
+    border: 0px solid #e7e7e7;
+	 border-radius: 5px;
+    padding: 10px ;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 10px 10px 40px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+	}
+	#submit:hover
+	{
+		background-color: #e7e7e7;
+	}
+	input:hover{	
+		box-shadow: 1px 2px 3px gray;
+	}
+	td{
+		padding:8px;
+	}
+
 .col-xs-20,
 .col-sm-20,
 .col-md-20,
@@ -2331,9 +2384,8 @@ ol.list3 {
 .buttons a,
 button,
 input[type="submit"] {
-	font-size: 14px;
-	text-transform: uppercase;
-	font-weight: 700;
+	font-size: 12x;
+	font-weight: 400;
 	padding: 17px 25px;
 	margin-bottom: 4px;
 	line-height: 1;
@@ -7364,7 +7416,7 @@ body.boxed {
 
 .header_mainmenu {
 	overflow: visible;
-	width: auto;
+	width: 10000px;
 	padding: 0 15px;
 }
 
@@ -9210,7 +9262,9 @@ body.active-side-header.slide-right .page_header_side {
 .ds .entry-meta .comments-link a {
 	color: #ffffff;
 }
-
+table tbody tr:nth-child(even) {
+    background: #f4f4f4;
+}
 .ds #timetable tbody th,
 .ds #timetable tbody td {
 	border-color: rgba(152, 152, 152, 0.2);
@@ -10458,7 +10512,9 @@ section .intro_section .slide_description_wrapper {
 
 	.intro_section .slide_description_wrapper {
 		padding: 0;
-		position: static;
+		position: absolute;
+		vertical-align: middle;
+		top:20%;
 	}
 
 	.intro_section .flex-direction-nav .flex-prev {
