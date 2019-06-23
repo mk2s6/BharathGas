@@ -26,7 +26,7 @@ router.get('/login', auth.protectTokenVerify , async (req, res) => res.render('s
  * Route for sales home page
  * @name /sales/
  */
-router.get('/', auth.protectDistributorAccess, async (req, res) => {
+router.get('/', auth.protectSalesAccess, async (req, res) => {
   try {
     const [rows] = await pool.execute(
       `
