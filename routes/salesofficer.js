@@ -135,12 +135,12 @@ router.post(
 
     try {
       [salesOfficerId] = await conn.query('SELECT MAX(TRIM(LEADING ? FROM saof_id)) AS max FROM sales_officer', [SOIdPrefix]);
-      console.log(salesOfficerId[0]);
+      // console.log(salesOfficerId[0]);
     } catch (e) {
       console.log(e);
     }
     const SOId = SOIdPrefix + pad(parseInt(salesOfficerId[0].max === null ? 0 : salesOfficerId[0].max)  + 1, 3);
-    console.log(SOId);
+    // console.log(SOId);
 
     try {
       [salesOfficerInsert] = await conn.query(

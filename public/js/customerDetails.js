@@ -11,6 +11,7 @@ $(() => {
 
   function displayCustomer(customer) {
     //   const businessName =
+    console.log(customer);
     $('#ui_business_name').html(customer.businessName);
     $('#ui_proprietor_name').html(customer.proprietorName);
     $('#ui_primary_mobile').html(customer.primaryMobile);
@@ -23,7 +24,10 @@ $(() => {
     $('#ui_feedback').html(customer.feedback);
     $('#ui_pincode').html(customer.pincode);
     $('#ui_secondary_mobile').html(customer.secondaryMobile);
-    $('#ui_sales_officer').html(customer.salesOfficer || null);
+    $('#ui_added_by').html(customer.addedBy);
+    $('#ui_demand').html(customer.demand);
+    $('#ui_package').html(customer.package);
+    $('#ui_discount').html(customer.discount);
   }
 
   $(window).on('load', (e) => {

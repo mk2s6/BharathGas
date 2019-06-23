@@ -136,7 +136,7 @@ router.post(
     } catch (e) {
       console.log(e);
     }
-    const custId = custIdPrefix + pad(parseInt(customerId[0].max) + 1, 3);
+    const custId = custIdPrefix + pad(parseInt(customerId[0].max === null ? 0 : customerId[0].max) + 1, 3);
     // console.log(custId);
 
     try {
@@ -144,7 +144,7 @@ router.post(
         `INSERT INTO customer(cust_id, cust_name, cust_business_name, cust_remarks, cust_email, cust_loc_lat, cust_loc_lon,
               cust_primary_mobile, cust_pwd, cust_secondary_mobile, cust_address, cust_city, 
               cust_state, cust_country, cust_pincode, cust_last_login_IP, cust_added_by, cust_added_by_name, cust_added_by_type) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           custId,
           req.body.ui_proprietor_name,
@@ -274,19 +274,36 @@ router.get('/list', auth.protectTokenCheck, async (req, res) => {
  */
 router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
   // res.render('customerList');
+  let query = `SELECT TRIM(LEADING ? FROM cust_id) AS sNo, cust_name AS proprietorName, 
+  cust_business_name AS businessName, (SELECT cdi_company_used FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS omc 
+  FROM customer `;
+  let queryParams = [custIdPrefix];
+  switch (req.user.role) {
+    case constant.defaultRoles.DISTRIBUTOR:
+      // query += true;
+      break; 
+    case constant.defaultRoles.SALES_OFFICER:
+      query += ' WHERE  cust_added_by = ? AND cust_added_by_type = ?;'
+      queryParams.push(req.user.id, req.user.role);
+      break;
+    case constant.defaultRoles.DELIVERY:
+      query += ' WHERE  cust_added_by = ? AND cust_added_by_type = ?;'
+      queryParams.push(req.user.id, req.user.role);
+      break;
+    // default:
+      // return res.status(403).render('403');
+  }
   try {
     const [rows] = await pool.execute(
-      `SELECT TRIM(LEADING ? FROM cust_id) AS sNo, cust_name AS proprietorName, 
-      cust_business_name AS businessName, (SELECT cdi_company_used FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS omc 
-      FROM customer `,
-      [custIdPrefix],
+      query,
+      queryParams
     );
-    // console.log(rows);
+    console.log(rows);
     return res.status(200).send(responseGenerator.success('customer list', 'Customer list retrieved successfully', rows));
   } catch (e) {
     console.log(e);
-    const beCustomerDetailsAlreadyExist = error.errList.dbError.ERR_CUSTOMER_ADD_DETAILS_EXISTS;
-    return res.status(400).send(responseGenerator.dbError(beCustomerDetailsAlreadyExist));
+    const beCustomerDetailsAlreadyExist = error.errList.internalError.ERR_CUSTOMER_ADD_DETAILS_EXISTS;
+    return res.status(400).send(responseGenerator.internalError(beCustomerDetailsAlreadyExist));
   }
 });
 
@@ -329,20 +346,43 @@ router.get(
       return res.status(422).send(responseGenerator.validationError(errors.mapped(), fieldsToValidate));
     }
     const custId = custIdPrefix + req.params.cust_id;
+    let query =         `SELECT cust_name AS proprietorName, cust_business_name AS businessName, 
+    cust_remarks AS feedback, cust_email AS email, cust_primary_mobile AS primaryMobile, cust_secondary_mobile AS secondaryMobile, 
+    cust_address AS address, cust_city AS city, cust_state AS state, cust_country AS country, cust_pincode AS pincode,
+    CONCAT(  cust_added_by_type, ': ', cust_added_by_name) AS addedBy, 
+    (SELECT cdi_company_used FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS omc,
+    (SELECT CONCAT(  cdi_demand_per_month, cdi_demand_per_month_type) FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS demand,
+    (SELECT CONCAT(  cdi_package, cdi_package_type) FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS package,
+    (SELECT CONCAT(  cdi_running_discount, '%') FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS discount
+    FROM customer WHERE cust_id = ?  `;
+    let queryParams = [custId];
+
+    switch (req.user.role) {
+      case constant.defaultRoles.DISTRIBUTOR:
+        break; 
+      case constant.defaultRoles.SALES_OFFICER:
+        query += ' AND cust_added_by = ? AND cust_added_by_type = ?;'
+        queryParams.push(req.user.id, req.user.role);
+        break;
+      case constant.defaultRoles.DELIVERY:
+        query += ' AND cust_added_by = ? AND cust_added_by_type = ?;'
+        queryParams.push(req.user.id, req.user.role);
+        break;
+      default:
+        return res.status(403).render(error);
+    }
+     
     try {
-      const [rows] = await pool.execute(
-        `SELECT cust_name AS proprietorName, cust_business_name AS businessName, 
-            cust_remarks AS feedback, cust_email AS email, cust_primary_mobile AS primaryMobile, cust_secondary_mobile AS secondaryMobile, 
-            cust_address AS address, cust_city AS city, cust_state AS state, cust_country AS country, cust_pincode AS pincode,
-            cust_saof_name AS salesOfficer, (SELECT cdi_company_used FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS omc 
-            FROM customer WHERE cust_id = ?`,
-        [custId],
+      const [rows] = await pool.execute(query
+,
+        queryParams,
       );
-      return res.status(200).send(responseGenerator.success('Customer details', 'Customer details fetched successfuly', rows));
+      // console.log(rows);
+      return res.status(200).send(responseGenerator.success('Customer details', 'Customer details fetched successfully', rows));
     } catch (e) {
       console.log(e);
-      const beCustomerDetailsAlreadyExist = error.errList.dbError.ERR_CUSTOMER_ADD_DETAILS_EXISTS;
-      return res.status(400).send(responseGenerator.dbError(beCustomerDetailsAlreadyExist));
+      const beCustomerDetailsAlreadyExist = error.errList.internalError.ERR_SELECT_COUNTRY_LIST_FAILURE;
+      return res.status(400).send(responseGenerator.internalError(beCustomerDetailsAlreadyExist));
     }
     // return res.render('customerDetails');
   },
