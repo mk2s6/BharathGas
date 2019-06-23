@@ -14,39 +14,39 @@ const mailer = require('../model/mailer');
 const multer = require('../model/multer');
 
 const router = express.Router();
-const SOIdPrefix = 'SAOFSK0';
+const DelIdPrefix = 'DELVSK0';
 
 /**
- * Route for sales login page
- * @name /sales/login
+ * Route for delivery login page
+ * @name /delivery/login
  */
-router.get('/login', async (req, res) => res.render('salesOfficerLogin'));
+router.get('/login', async (req, res) => res.render('deliveryLogin'));
 
 /**
- * Route for sales home page
- * @name /sales/
+ * Route for delivery home page
+ * @name /delivery/
  */
 router.get('/', auth.protectTokenCheck, async (req, res) => {
   try {
     const [rows] = await pool.execute(
       `
-      SELECT saof_name AS name , saof_email AS email, saof_primary_mobile AS primaryMobile, 
-                saof_address AS address, saof_city AS city, saof_state AS state, saof_country AS country, 
-                saof_pincode AS pincode, saof_secondary_mobile AS secondaryMobile
-        FROM sales_officer
-        WHERE saof_id = ?   
+      SELECT delv_name AS name , delv_email AS email, delv_primary_mobile AS primaryMobile, 
+                delv_address AS address, delv_city AS city, delv_state AS state, delv_country AS country, 
+                delv_pincode AS pincode, delv_secondary_mobile AS secondaryMobile
+        FROM delivery
+        WHERE delv_id = ?   
     `,
       [req.user.id],
     );
-    console.log(req.user);
-    console.log(rows);
+    // console.log(req.user);
+    // console.log(rows);
     if (rows.length !== 1) {
       const beUserDetailsNotFound = responseGenerator.dbError(error.errList.dbError.ERR_DISTRIBUTOR_PROFILE_NOT_FOUND);
       return res.status(404).send(beUserDetailsNotFound);
     }
     // const description = 'Distributor profile details fetched successfully';
     // return res.status(200).send(responseGenerator.success('Distributor Profile', description, rows));
-    return res.render('sales', {
+    return res.render('deliveryProfile', {
       name: rows[0].name,
       email: rows[0].email,
       primaryMobile: rows[0].primaryMobile,
@@ -65,13 +65,13 @@ router.get('/', auth.protectTokenCheck, async (req, res) => {
 });
 
 /**
- * @name /sales_officer/add/new
+ * @name /delivery/add/new
  */
 router.post(
   '/add/new',
   auth.protectTokenCheck,
   [
-    vs.isValidStrLenWithTrim('body', 'ui_name', 3, 50, 'Please enter a valid sales officer name between 3 to 50 characters'),
+    vs.isValidStrLenWithTrim('body', 'ui_name', 3, 50, 'Please enter a valid delivery officer name between 3 to 50 characters'),
     vs.isMobile('body', 'ui_primary_mobile'),
     vs.ifExistIsEmail('body', 'ui_email'),
     vs.isValidStrLenWithTrim('body', 'ui_address', 3, 100, 'Please enter address name between 3 to 100 characters'),
@@ -118,8 +118,8 @@ router.post(
     }
 
     // Variables for results
-    let salesOfficerId;
-    let salesOfficerInsert;
+    let deliveryId;
+    let deliveryInsert;
 
     // Begin Transaction
     try {
@@ -134,21 +134,21 @@ router.post(
     }
 
     try {
-      [salesOfficerId] = await conn.query('SELECT MAX(TRIM(LEADING ? FROM saof_id)) AS max FROM sales_officer', [SOIdPrefix]);
-      console.log(salesOfficerId[0]);
+      [deliveryId] = await conn.query('SELECT MAX(TRIM(LEADING ? FROM delv_id)) AS max FROM delivery', [DelIdPrefix]);
+    //   console.log(deliveryId[0]);
     } catch (e) {
       console.log(e);
+      const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_COMMIT_TRANSACTION_FAILURE;
+      return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
     }
-    const SOId = SOIdPrefix + pad(parseInt(salesOfficerId[0].max === null ? 0 : salesOfficerId[0].max)  + 1, 3);
-    console.log(SOId);
-
+    const DvId = DelIdPrefix + pad(parseInt(deliveryId[0].max === null ? 0 : deliveryId[0].max)  + 1, 3);
     try {
-      [salesOfficerInsert] = await conn.query(
-        `INSERT INTO sales_officer(saof_id, saof_name, saof_email, saof_primary_mobile, saof_pwd, saof_secondary_mobile, 
-            saof_address, saof_city, saof_state, saof_country, saof_pincode, saof_last_login_IP) 
+      [deliveryInsert] = await conn.query(
+        `INSERT INTO delivery(delv_id, delv_name, delv_email, delv_primary_mobile, delv_pwd, delv_secondary_mobile, 
+            delv_address, delv_city, delv_state, delv_country, delv_pincode, delv_last_login_IP) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          SOId,
+          DvId,
           req.body.ui_name,
           req.body.ui_email,
           req.body.ui_primary_mobile,
@@ -184,9 +184,9 @@ router.post(
       return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
     }
     return res.status(200).send(
-      responseGenerator.success('Sales officer addition', 'Sales officer added successfully', [
+      responseGenerator.success('Delivery Agent addition', 'Delivery Agent added successfully', [
         {
-          salesOfficerId: SOId,
+          deliveryId: DvId,
           name: req.body.ui_name,
           email: req.body.ui_email,
           mobile: req.body.ui_mobile,
@@ -211,14 +211,13 @@ function pad(number, length) {
   return str;
 }
 
-
 /**
- * route for company sales login
+ * route for company delivery login
  *
- * @name /sales/login
+ * @name /delivery/login
  *
- * @param ui_username : Email or mobile of the sales
- * @param ui_password : password of the sales
+ * @param ui_username : Email or mobile of the delivery
+ * @param ui_password : password of the delivery
  *
  */
 router.post(
@@ -238,13 +237,13 @@ router.post(
     const bePassword = req.body.ui_password;
     const beUsername = req.body.ui_username;
 
-    let qStrDistDetails = 'SELECT saof_id, saof_name, saof_pwd, saof_is_email_verified FROM sales_officer ';
+    let qStrDistDetails = 'SELECT delv_id, delv_name, delv_pwd, delv_is_email_verified FROM delivery ';
 
     let qRespDistDetails;
     if (hf.isEmail(beUsername)) {
-      qStrDistDetails += 'WHERE saof_email = ?';
+      qStrDistDetails += 'WHERE delv_email = ?';
     } else {
-      qStrDistDetails += 'WHERE saof_primary_mobile = ?';
+      qStrDistDetails += 'WHERE delv_primary_mobile = ?';
     }
 
     try {
@@ -260,7 +259,7 @@ router.post(
       // Verify password
       let isValidPassword;
       try {
-        isValidPassword = await auth.verifyPassword(bePassword, qRespDistDetails[0].saof_pwd);
+        isValidPassword = await auth.verifyPassword(bePassword, qRespDistDetails[0].delv_pwd);
       } catch (e) {
         // Unable to compare hash and Password
         const responseUnableToCompareHash = responseGenerator.internalError(error.errList.internalError.ERR_COMPARE_PASSWORD_AND_HASH);
@@ -274,11 +273,11 @@ router.post(
       let token;
       try {
         token = auth.genAuthToken({
-          id: qRespDistDetails[0].saof_id,
-          role: 'salesOfficer',
+          id: qRespDistDetails[0].delv_id,
+          role: 'delivery',
           // Use JSON.parse instead of string.split() because JSON.parse convert it to array of numbers
           // but .split() convert it to array of strings. // branchID: qBranchIDList[0].branch_ids.split(','),
-          [constant.tokenType.KEY]: constant.tokenType.value.SALES_OFFICER,
+          [constant.tokenType.KEY]: constant.tokenType.value.DELIVERY,
           [constant.permissionKey.CUSTOMER_MANAGEMENT]: true,
           [constant.permissionKey.DISTRIBUTOR]: false,
           [constant.permissionKey.SALES_OFFICER_MANAGEMENT]: false,
@@ -287,21 +286,21 @@ router.post(
         const responseGenerateTokenError = responseGenerator.internalError(error.errList.internalError.ERR_AUTH_TOKEN_GENERATION_ERROR);
         return res.status(405).send(responseGenerateTokenError);
       }
-      const emailVerified = qRespDistDetails[0].saof_is_email_verified ? 'Verified' : 'Not Verified';
+      const emailVerified = qRespDistDetails[0].delv_is_email_verified ? 'Verified' : 'Not Verified';
       const items = [
         {
-          username: qRespDistDetails[0].saof_name,
+          username: qRespDistDetails[0].delv_name,
           isEmailVerified: emailVerified,
         },
       ];
       try {
         const [ipUpdate] = await pool.execute(
           `
-                UPDATE sales_officer 
-                SET saof_last_login = ? , saof_last_login_IP = ?
-                WHERE saof_id = ?;
+                UPDATE delivery 
+                SET delv_last_login = ? , delv_last_login_IP = ?
+                WHERE delv_id = ?;
               `,
-          [req.utc_start_time.format('YYYY-MM-DD HH:mm:ss'), req.ip, qRespDistDetails[0].saof_id],
+          [req.utc_start_time.format('YYYY-MM-DD HH:mm:ss'), req.ip, qRespDistDetails[0].delv_id],
         );
       } catch (e) {
         console.log(e);
@@ -321,14 +320,5 @@ router.post(
     return res.status(405).send(responseCompDistributorNotExist);
   },
 );
-
-/**
- * route to view of register a sales officer
- *
- * @name /sales/register/delivery
- */
-router.get('/register/delivery', auth.protectTokenCheck, async (req, res) => {
-  res.render('deliveryRegistration');
-});
 
 module.exports = router;

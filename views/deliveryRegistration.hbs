@@ -1,0 +1,111 @@
+{{> header }}
+{{> salesHeader }}
+<section class="page_breadcrumbs ds color parallax section_padding_top_20 section_padding_bottom_20">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h2 class="text-uppercase">Register Delivery Agent</h2>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="ls section_padding_top_30 section_padding_bottom_30">
+    <div class="container" align="center">
+        <div class="row">
+            <form class="shop-register" role="form">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group validate-required" id="billing_first_name_field">
+                        <span class="input input--hoshi">
+                            <input class="input__field input__field--hoshi" type="text" name="ui_name" id="ui_name"
+                                required />
+                            <label class="input__label input__label--hoshi input__label--hoshi-color-1" for="ui_name">
+                                <span class="input__label-content input__label-content--hoshi">Name</span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="form-group validate-required" id="billing_first_name_field">
+                        <span class="input input--hoshi">
+                            <input class="input__field input__field--hoshi" type="text" name="ui_primary_mobile" id="ui_primary_mobile"
+                                required />
+                            <label class="input__label input__label--hoshi input__label--hoshi-color-1" for="ui_primary_mobile">
+                                <span class="input__label-content input__label-content--hoshi">Primary Mobile</span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group validate-required" id="billing_last_name_field">
+                        <span class="input input--hoshi">
+                            <input class="input__field input__field--hoshi" type="text" name="ui_email" id="ui_email" />
+                            <label class="input__label input__label--hoshi input__label--hoshi-color-1" for="ui_email">
+                                <span class="input__label-content input__label-content--hoshi">E-mail</span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="form-group validate-required" id="billing_last_name_field">
+                        <span class="input input--hoshi">
+                            <input class="input__field input__field--hoshi" type="text" name="ui_secondary_mobile"
+                                id="ui_secondary_mobile" />
+                            <label class="input__label input__label--hoshi input__label--hoshi-color-1"
+                                for="ui_secondary_mobile">
+                                <span class="input__label-content input__label-content--hoshi">Secondary Mobile</span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group address-field validate-required" id="billing_address_fields">
+                        <span class="input input--hoshi" style="max-width:950px">
+                            <input class="input__field input__field--hoshi" type="text" name="ui_address" id="ui_address" />
+                            <label class="input__label input__label--hoshi input__label--hoshi-color-1" for="ui_address">
+                                <span class="input__label-content input__label-content--hoshi">Address</span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group"> <label for="billing_state" class="control-label">
+                            <select class="form-control" name="ui_state" id="ui_city" style="margin-top:20px; width:350px" required>
+                                <option value="" selected="selected">Select a city</option>
+                                <option value="SriKalahasti" selected="">SriKalahasti</option>
+                            </select>
+                    </div>
+                    <div class="form-group"> <label for="billing_state" class="control-label">
+                            <select class="form-control" name="ui_state" id="ui_state" style="width:350px" required>
+                                <option value="" selected="selected">Select a state</option>
+                                <option value="Andhra Pradesh" selected="selected">Andhra Pradesh</option>
+                            </select>
+                    </div>
+
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group validate-required" id="billing_last_name_field">
+                        <span class="input input--hoshi">
+                            <input class="input__field input__field--hoshi" type="text" name="ui_pincode"
+                                id="ui_pincode" />
+                            <label class="input__label input__label--hoshi input__label--hoshi-color-1"
+                                for="ui_pincode">
+                                <span class="input__label-content input__label-content--hoshi">Pincode</span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="form-group"> <label for="billing_country" class="control-label">
+                            <select class="form-control" name="ui_country" id="ui_country" style="width:350px">
+                                <option value="" selected="selected">Select a country</option>
+                                <option value="India" selected="selected">India</option>
+
+                            </select>
+                    </div>
+                </div>
+                <div class="col-sm-12"> <button type="button" id="register_so"
+                        class="theme_button wide_button color1 topmargin_40">Register Now</button> <button type="reset"
+                        class="theme_button wide_button">Clear Form</button> </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="js/classie.js"></script>
+<script src="js/stable.js"></script>
+<script src="js/distributorRegister.js"></script>
+{{> footer-end }}

@@ -93,11 +93,11 @@
                                     <div class="col-md-2"></div>
                                     <div class="col-md-8">
                                         <input type="password" name="ui_current_password" class="form-control" id="ui_current_password"
-                                            placeholder="Current Password" required>
+                                            placeholder="Current Password" autocomplete="off" required>
                                         <input type="password" name="ui_new_password" style="margin-top:15px;" class="form-control"
-                                            id="ui_new_password" placeholder="New Password" required>
+                                            id="ui_new_password" placeholder="New Password" autocomplete="off" required>
                                         <input type="password" name="ui_re_new_password" style="margin-top:15px;" class="form-control"
-                                            id="ui_re_new_password" placeholder="Re-Enter New Password" required>
+                                            id="ui_re_new_password" placeholder="Re-Enter New Password" autocomplete="off" required>
                                         <button type="button" style="margin-top:15px;" name="quick_apply"
                                             class="btn btn-primary pull-right">Change Password</button>
                                     </div>
@@ -119,7 +119,7 @@
         fields.prop("disabled", true);
 
         $("#dist_edit").click(function () {
-            { { !--console.log(fields.attr("disabled")); --} }
+            {{!--console.log(fields.attr("disabled")); --}}
             if (fields.attr("disabled"))
                 fields.attr("disabled", false);
             else

@@ -40,6 +40,7 @@ const homeRouter = require('./routes/home');
 const salesRouter = require('./routes/salesofficer');
 const customerRouter = require('./routes/customer');
 const contactUsRouter = require('./routes/contact');
+const deliveryRouter = require('./routes/delivery');
 
 
 const app = express();
@@ -122,7 +123,8 @@ app.use('/location', locationRouter);
 app.use('/distributor', distributorRouter);
 app.use('/sales', salesRouter);
 app.use('/customer', customerRouter);
-app.use('/contactUs', contactUsRouter)
+app.use('/contactUs', contactUsRouter);
+app.use('/delivery', deliveryRouter);
 
 
 // app.use('/notification', notificationRouter);

@@ -240,11 +240,10 @@ function protectTokenVerify(req, res, next) {
           return res.redirect('/distributor');
         case 'salesOfficer':
           return res.redirect('/sales');
-        case 'deliveryAgent':
-          return res.redirect('/deliveryAgent');
+        case 'delivery':
+          return res.redirect('/delivery');
         default:
           return res.redirect('/');
-          break;
       }
       // return res.redirect()
     }

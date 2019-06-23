@@ -103,6 +103,7 @@ const tokenType = {
   value: {
     DISTRIBUTOR: 'dist', // Company Employee
     SALES_OFFICER: 'saof', // FSJARS's Employee
+    DELIVERY: 'delv',
     CUSTOMER: 'cust',
   },
 };

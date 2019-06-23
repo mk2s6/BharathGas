@@ -7,6 +7,8 @@ $(() => {
     const ui_email = $('#ui_email').val();
     const ui_omc = $('#ui_omc').val();
     const ui_address = $('#ui_address').val();
+    const ui_latitude = $('#ui_latitude').val();
+    const ui_longitude = $('#ui_longitude').val();
     const ui_city = $('#ui_city').val();
     const ui_state = $('#ui_state').val();
     const ui_country = $('#ui_country').val();
@@ -39,6 +41,8 @@ $(() => {
       ui_mobile,
       ui_email,
       ui_omc,
+      ui_latitude,
+      ui_longitude,
       ui_address,
       ui_city,
       ui_state,

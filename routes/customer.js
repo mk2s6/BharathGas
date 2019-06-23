@@ -17,17 +17,26 @@ const custIdPrefix = 'CUSTSK0';
 
 const router = express.Router();
 
-/**
- * Route for customer login page
- * @name /customer/login
- */
-router.get('/login', async (req, res) => res.render('customerLogin'));
+// /**
+//  * Route for customer login page
+//  * @name /customer/login
+//  */
+// router.get('/login', async (req, res) => res.render('customerLogin'));
 
 /**
  * @name /customer/add/new
  */
 router.get('/add/new', auth.protectTokenCheck, async (req, res) => {
-  res.render('customerRegistration');
+  switch (req.user.role) {
+    case 'distributor':
+      return res.render('customerRegistration');
+    case 'salesOfficer':
+      return res.render('customerRegistrationSales');
+      case 'delivery':
+        return res.render('customerRegistrationDelivery');
+    default:
+      return res.status(403).render(error);
+  }
 });
 
 /**
@@ -42,6 +51,8 @@ router.post(
     vs.isMobile('body', 'ui_mobile'),
     vs.ifExistIsEmail('body', 'ui_email'),
     vs.isValidOMC('body', 'ui_omc'),
+    vs.isNumeric('body', 'ui_latitude', 'Please get the valid location details'),
+    vs.isNumeric('body', 'ui_longitude', 'Please get the valid location details'),
     vs.isValidStrLenWithTrim('body', 'ui_address', 3, 100, 'Please enter address name between 3 to 100 characters'),
     vs.ifExistIsMobile('body', 'ui_secondary_mobile', 3, 50, 'Please enter a valid proprietor name between 3 to 50 characters'),
     vs.isValidStrLenWithTrim('body', 'ui_city', 3, 50, 'Please select a valid city'),
@@ -60,6 +71,8 @@ router.post(
         'ui_mobile',
         'ui_email',
         'ui_omc',
+        'ui_latitude',
+        'ui_longitude',
         'ui_address',
         'ui_secondary_mobile',
         'ui_city',
@@ -118,15 +131,18 @@ router.post(
 
     try {
       [customerInsert] = await conn.query(
-        `INSERT INTO customer(cust_id, cust_name, cust_business_name, cust_remarks, cust_email,
-              cust_primary_mobile, cust_pwd, cust_secondary_mobile, cust_address, cust_city, cust_state, cust_country, cust_pincode, cust_last_login_IP) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO customer(cust_id, cust_name, cust_business_name, cust_remarks, cust_email, cust_loc_lat, cust_loc_lon,
+              cust_primary_mobile, cust_pwd, cust_secondary_mobile, cust_address, cust_city, 
+              cust_state, cust_country, cust_pincode, cust_last_login_IP) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           custId,
           req.body.ui_proprietor_name,
           req.body.ui_business_name,
           req.body.ui_feedback,
           req.body.ui_email,
+          req.body.ui_latitude,
+          req.body.ui_longitude,
           req.body.ui_mobile,
           beHashedPassword,
           req.body.ui_secondary_mobile,
@@ -230,7 +246,10 @@ router.get('/details', auth.protectTokenCheck, async (req, res) => res.render('c
 router.get(
   '/details/:cust_id',
   auth.protectTokenCheck,
-  [vs.isNumeric('params', 'cust_id', 'Please provide valid customer details'), vs.isExactLenWithTrim('params', 'cust_id', 3, 'Please provide valid customer details')],
+  [
+    vs.isNumeric('params', 'cust_id', 'Please provide valid customer details'),
+    vs.isExactLenWithTrim('params', 'cust_id', 3, 'Please provide valid customer details'),
+  ],
   async (req, res) => {
     // console.log(req);
     const errors = vs.getValidationResult(req);
@@ -241,16 +260,17 @@ router.get(
     }
     const custId = custIdPrefix + req.params.cust_id;
     try {
-      const [rows] = await pool.execute(`SELECT cust_name AS proprietorName, cust_business_name AS businessName, 
+      const [rows] = await pool.execute(
+        `SELECT cust_name AS proprietorName, cust_business_name AS businessName, 
             cust_remarks AS feedback, cust_email AS email, cust_primary_mobile AS primaryMobile, cust_secondary_mobile AS secondaryMobile, 
             cust_address AS address, cust_city AS city, cust_state AS state, cust_country AS country, cust_pincode AS pincode,
             cust_saof_name AS salesOfficer, (SELECT cdi_company_used FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS omc 
-            FROM customer WHERE cust_id = ?`, [custId]);
-      return res.status(200).send(responseGenerator.success('Customer details', 'Customer details fetched successfuly', rows))
-
+            FROM customer WHERE cust_id = ?`,
+        [custId],
+      );
+      return res.status(200).send(responseGenerator.success('Customer details', 'Customer details fetched successfuly', rows));
     } catch (e) {
-    console.log(e);
-
+      console.log(e);
     }
     // return res.render('customerDetails');
   },
