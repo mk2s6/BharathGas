@@ -32,8 +32,8 @@ router.get('/add/new', auth.protectTokenCheck, async (req, res) => {
       return res.render('customerRegistration');
     case constant.defaultRoles.SALES_OFFICER:
       return res.render('customerRegistrationSales');
-      case constant.defaultRoles.DELIVERY:
-        return res.render('customerRegistrationDelivery');
+    case constant.defaultRoles.DELIVERY:
+      return res.render('customerRegistrationDelivery');
     default:
       return res.status(403).render(error);
   }
@@ -61,6 +61,11 @@ router.post(
     vs.isNumeric('body', 'ui_pincode', 'Please enter a valid pincode'),
     vs.isExactLenWithTrim('body', 'ui_pincode', 6, 'Pincode should be of 6 digits'),
     vs.isValidStrLenWithTrim('body', 'ui_feedback', 15, 2000, 'Please enter a valid feedback between 15 to 2000 characters'),
+    vs.isNumeric('body', 'ui_demand', 'Please provide a valid demand details'),
+    vs.isValidAvailableCylinderType('body', 'ui_demand_type', 'Please select a valid demand per Kgs or Cylinders'),
+    vs.isNumeric('body', 'ui_current_package', 'Please provide a valid current package details '),
+    vs.isValidAvailableCylinderType('body', 'ui_current_pkg_type', 'Please select a valid current package per Kgs or Cylinders'),
+    vs.isNumeric('body', 'ui_discount', 'Please provide a valid current discount details '),
   ],
   async (req, res) => {
     const errors = vs.getValidationResult(req);
@@ -80,6 +85,11 @@ router.post(
         'ui_country',
         'ui_pincode',
         'ui_feedback',
+        'ui_demand',
+        'ui_demand_type',
+        'ui_current_package',
+        'ui_current_pkg_type',
+        'ui_discount',
       ];
       // This is if else so we don't need return
       return res.status(422).send(responseGenerator.validationError(errors.mapped(), fieldsToValidate));
@@ -156,6 +166,40 @@ router.post(
       );
     } catch (e) {
       console.log(e);
+      await conn.rollback();
+      await conn.release();
+      if (e.code === 'ER_DUP_ENTRY') {
+        const beCustomerDetailsAlreadyExist = error.errList.dbError.ERR_CUSTOMER_ADD_DETAILS_EXISTS;
+        return res.status(400).send(responseGenerator.dbError(beCustomerDetailsAlreadyExist));
+      }
+      const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_COMMIT_TRANSACTION_FAILURE;
+      return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
+    }
+
+    try {
+      [customerBusinessDetails] = await conn.query(
+        `INSERT INTO customer_demand_info(cdi_cust_id, cdi_cust_name, cdi_demand_per_month, cdi_demand_per_month_type, cdi_company_used,
+              cdi_package, cdi_package_type, cdi_running_discount, cdi_added_by, cdi_added_by_name, cdi_added_by_type
+        ) 
+          VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
+        [
+          custId,
+          req.body.ui_proprietor_name,
+          req.body.ui_demand,
+          req.body.ui_demand_type,
+          req.body.ui_omc,
+          req.body.ui_current_package,
+          req.body.ui_current_pkg_type,
+          req.body.ui_discount,
+          req.user.id,
+          req.user.name,
+          req.user.role,
+        ],
+      );
+    } catch (e) {
+      await conn.rollback();
+      await conn.release();
+      console.log(e);
       if (e.code === 'ER_DUP_ENTRY') {
         const beCustomerDetailsAlreadyExist = error.errList.dbError.ERR_CUSTOMER_ADD_DETAILS_EXISTS;
         return res.status(400).send(responseGenerator.dbError(beCustomerDetailsAlreadyExist));
@@ -215,8 +259,8 @@ router.get('/list', auth.protectTokenCheck, async (req, res) => {
       return res.render('customerList');
     case constant.defaultRoles.SALES_OFFICER:
       return res.render('customerListSales');
-      case constant.defaultRoles.DELIVERY:
-        return res.render('customerListDelivery');
+    case constant.defaultRoles.DELIVERY:
+      return res.render('customerListDelivery');
     default:
       return res.status(403).render(error);
   }
@@ -238,6 +282,8 @@ router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
     return res.status(200).send(responseGenerator.success('customer list', 'Customer list retrieved successfully', rows));
   } catch (e) {
     console.log(e);
+    const beCustomerDetailsAlreadyExist = error.errList.dbError.ERR_CUSTOMER_ADD_DETAILS_EXISTS;
+    return res.status(400).send(responseGenerator.dbError(beCustomerDetailsAlreadyExist));
   }
 });
 
@@ -252,8 +298,8 @@ router.get('/details', auth.protectTokenCheck, async (req, res) => {
       return res.render('customerDetails');
     case constant.defaultRoles.SALES_OFFICER:
       return res.render('customerDetailsSales');
-      case constant.defaultRoles.DELIVERY:
-        return res.render('customerDetailsDelivery');
+    case constant.defaultRoles.DELIVERY:
+      return res.render('customerDetailsDelivery');
     default:
       return res.status(403).render(error);
   }
@@ -292,6 +338,8 @@ router.get(
       return res.status(200).send(responseGenerator.success('Customer details', 'Customer details fetched successfuly', rows));
     } catch (e) {
       console.log(e);
+      const beCustomerDetailsAlreadyExist = error.errList.dbError.ERR_CUSTOMER_ADD_DETAILS_EXISTS;
+      return res.status(400).send(responseGenerator.dbError(beCustomerDetailsAlreadyExist));
     }
     // return res.render('customerDetails');
   },

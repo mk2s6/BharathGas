@@ -275,6 +275,7 @@ router.post(
       try {
         token = auth.genAuthToken({
           id: qRespDistDetails[0].saof_id,
+          name: qRespDistDetails[0].saof_name,
           role: constant.defaultRoles.SALES_OFFICER,
           // Use JSON.parse instead of string.split() because JSON.parse convert it to array of numbers
           // but .split() convert it to array of strings. // branchID: qBranchIDList[0].branch_ids.split(','),

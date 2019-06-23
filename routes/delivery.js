@@ -26,7 +26,7 @@ router.get('/login', auth.protectTokenVerify , async (req, res) => res.render('d
  * Route for delivery home page
  * @name /delivery/
  */
-router.get('/', auth.protectTokenCheck, async (req, res) => {
+router.get('/', auth.protectDeliveryAccess, async (req, res) => {
   try {
     const [rows] = await pool.execute(
       `
@@ -274,6 +274,7 @@ router.post(
       try {
         token = auth.genAuthToken({
           id: qRespDistDetails[0].delv_id,
+          name: qRespDistDetails[0].delv_name, 
           role: constant.defaultRoles.DELIVERY,
           // Use JSON.parse instead of string.split() because JSON.parse convert it to array of numbers
           // but .split() convert it to array of strings. // branchID: qBranchIDList[0].branch_ids.split(','),

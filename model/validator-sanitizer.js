@@ -821,6 +821,15 @@ function isValidOMC(location, omc) {
   return validator(omc).isIn(constant.omc).withMessage("Please select a valid OMC");
 }
 
+/**
+ * Validator to check whether the omc is valid or not
+ * @param {type} object 
+ */
+function isValidAvailableCylinderType(location, type, message) {
+  const validator = getFunctionName(location);
+  return validator(type).isIn(['Kgs', 'Cylinders']).withMessage(message);
+}
+
 // ======================================================================
 // API RELATED TO VALIDATION RESULT OBJECT
 // ======================================================================
@@ -900,6 +909,7 @@ module.exports.isWithinRange = isWithinRange;
 module.exports.isBoolean = isBoolean;
 module.exports.isValidDBDate = isValidDBDate;
 module.exports.isValidDBTime = isValidDBTime;
+module.exports.isValidAvailableCylinderType = isValidAvailableCylinderType;
 module.exports.isValidFutureDateTodayNotAllowed = isValidFutureDateTodayNotAllowed;
 module.exports.isValidFutureDateTodayAllowed = isValidFutureDateTodayAllowed;
 module.exports.isValidPastDateTodayNotAllowed = isValidPastDateTodayNotAllowed;

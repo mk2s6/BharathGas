@@ -14,7 +14,7 @@
     <div class="container" align="center">
         <div class="row">
             <form class="shop-register" role="form">
-                <div class="col-sm-6">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="form-group validate-required" id="billing_first_name_field">
                         <span class="input input--hoshi">
                             <input class="input__field input__field--hoshi" type="text" name="ui_business_name"
@@ -34,18 +34,8 @@
                             </label>
                         </span>
                     </div>
-                    <div class="form-group validate-required" id="billing_last_name_field">
-                        <span class="input input--hoshi">
-                            <input class="input__field input__field--hoshi" type="text" name="ui_secondary_mobile"
-                                id="ui_secondary_mobile" required />
-                            <label class="input__label input__label--hoshi input__label--hoshi-color-1"
-                                for="ui_secondary_mobile">
-                                <span class="input__label-content input__label-content--hoshi"> Secondary Mobile</span>
-                            </label>
-                        </span>
-                    </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="form-group validate-required" id="billing_first_name_field">
                         <span class="input input--hoshi">
                             <input class="input__field input__field--hoshi" type="text" name="ui_proprietor_name"
@@ -58,6 +48,19 @@
                     </div>
                     <div class="form-group validate-required" id="billing_last_name_field">
                         <span class="input input--hoshi">
+                            <input class="input__field input__field--hoshi" type="text" name="ui_secondary_mobile"
+                                id="ui_secondary_mobile" required />
+                            <label class="input__label input__label--hoshi input__label--hoshi-color-1"
+                                for="ui_secondary_mobile">
+                                <span class="input__label-content input__label-content--hoshi"> Secondary Mobile</span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group validate-required" id="billing_last_name_field">
+                        <span class="input input--hoshi">
                             <input class="input__field input__field--hoshi" type="email" name="ui_email"
                                 id="ui_email" />
                             <label class="input__label input__label--hoshi input__label--hoshi-color-1" for="ui_email">
@@ -65,28 +68,94 @@
                             </label>
                         </span>
                     </div>
-                    <div class="form-group"> <label for="ui_omc" class="control-label">
-                            <select class="form-control" name="ui_omc" id="ui_omc" style="margin-top:15px; width:350px"
-                                required>
-                                <option value="" selected="selected">Select OMC</option>
-                                <option value="BPC">BPC</option>
-                                <option value="HPC">HPC</option>
-                                <option value="IOC">IOC</option>
-                                <option value="Super Gas">Super Gas</option>
-                                <option value="Go Gas">Go Gas</option>
-                                <option value="Total Gas">Total Gas</option>
-                                <option value="Others">Others</option>
-                            </select>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <select class="form-control" name="ui_omc" id="ui_omc" style="margin-top:15px;" required>
+                            <option value="" selected="selected">Select OMC</option>
+                            <option value="BPC">BPC</option>
+                            <option value="HPC">HPC</option>
+                            <option value="IOC">IOC</option>
+                            <option value="Super Gas">Super Gas</option>
+                            <option value="Go Gas">Go Gas</option>
+                            <option value="Total Gas">Total Gas</option>
+                            <option value="Others">Others</option>
+                        </select>
                     </div>
                 </div>
-                <div class="col-sm-12">
-                    <div class="col-lg-4 col-sm-12">
-                        <button style="padding:21px; font-size:17px; margin-top:25px" type="button" id="geo_loc"
-                            class="fa fa-map-marker theme_button wide_button color2">&nbsp; | &nbsp; Get
+
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-group validate-required">
+                            <span class="input input--hoshi">
+                                <input class="input__field input__field--hoshi" type="email" name="ui_demand"
+                                    id="ui_demand" />
+                                <label class="input__label input__label--hoshi input__label--hoshi-color-1"
+                                    for="ui_demand">
+                                    <span class="input__label-content input__label-content--hoshi">Demand per month</span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <select class="form-control" name="ui_demand_type" id="ui_demand_type"
+                                style="margin-top:15px;" required>
+                                <option value="" selected="selected">Demand Per</option>
+                                <option value="Kgs">Kgs</option>
+                                <option value="Cylinders">Cylinders</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="form-group validate-required">
+                            <span class="input input--hoshi">
+                                <input class="input__field input__field--hoshi" type="email" name="ui_current_package"
+                                    id="ui_current_package" />
+                                <label class="input__label input__label--hoshi input__label--hoshi-color-1"
+                                    for="ui_current_package">
+                                    <span class="input__label-content input__label-content--hoshi">Current
+                                        Package</span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <select class="form-control" name="ui_current_pkg_type" id="ui_current_pkg_type"
+                                style="margin-top:15px;" required>
+                                <option value="" selected="selected">Current Package Per</option>
+                                <option value="Kgs">Kgs</option>
+                                <option value="Cylinders">Cylinders</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="form-group validate-required">
+                            <span class="input input--hoshi">
+                                <input class="input__field input__field--hoshi" type="email" name="ui_discount"
+                                    id="ui_discount" />
+                                <label class="input__label input__label--hoshi input__label--hoshi-color-1"
+                                    for="ui_discount">
+                                    <span class="input__label-content input__label-content--hoshi">Current
+                                        Discount</span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <button style=" width: 100%; padding:21px; font-size:17px; margin-top:25px" type="button"
+                            id="geo_loc" class="fa fa-map-marker theme_button wide_button color2">&nbsp; | &nbsp; Get
                             current
                             location</button>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="form-group address-field validate-required"> <label for="ui_latitude"
                                 class="control-label">
                                 <span class="grey">Latitude</span>
@@ -94,7 +163,7 @@
                                 id="ui_latitude" placeholder="" value="" disabled>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="form-group address-field validate-required"> <label for="ui_longitude"
                                 class="control-label">
                                 <span class="grey">Longitude</span>
@@ -105,7 +174,7 @@
                 </div>
                 <div class="col-sm-12">
                     <div class="form-group address-field validate-required" id="billing_address_fields">
-                        <span class="input input--hoshi" style="max-width:950px">
+                        <span class="input input--hoshi">
                             <input class="input__field input__field--hoshi" type="text" name="ui_address"
                                 id="ui_address" required />
                             <label class="input__label input__label--hoshi input__label--hoshi-color-1"
@@ -115,48 +184,47 @@
                         </span>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="form-group"> <label for="billing_state" class="control-label">
-                            <select class="form-control" name="ui_state" id="ui_city"
-                                style="margin-top:20px; width:350px" required>
-                                <option value="" selected="selected">Select a city</option>
-                                <option value="SriKalahasti" selected="">SriKalahasti</option>
-                            </select>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <select class="form-control" name="ui_city" id="ui_city" style="margin-top:20px;" required>
+                            <option value="" selected="selected">Select a city</option>
+                            <option value="SriKalahasti" selected="">SriKalahasti</option>
+                        </select>
                     </div>
-                    <div class="form-group"> <label for="billing_state" class="control-label">
-                            <select class="form-control" name="ui_state" id="ui_state"
-                                style="margin-top:20px; width:350px" required>
-                                <option value="" selected="selected">Select a state</option>
-                                <option value="Andhra Pradesh" selected="">Andhra Pradesh</option>
-                            </select>
+                    <div class="form-group">
+                        <select class="form-control" name="ui_state" id="ui_state" style="margin-top:20px;" required>
+                            <option value="" selected="selected">Select a state</option>
+                            <option value="Andhra Pradesh" selected="">Andhra Pradesh</option>
+                        </select>
                     </div>
 
                 </div>
-                <div class="col-sm-6">
-                    <div class="form-group validate-required" id="billing_last_name_field">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group validate-required">
                         <span class="input input--hoshi">
-                            <input class="input__field input__field--hoshi" type="text" name="ui_pincode"
-                                id="ui_pincode" required />
+                            <input class="input__field input__field--hoshi" style="margin-top: 10px;" type="text"
+                                name="ui_pincode" id="ui_pincode" required />
                             <label class="input__label input__label--hoshi input__label--hoshi-color-1"
                                 for="ui_pincode">
-                                <span class="input__label-content input__label-content--hoshi">Pincode</span>
+                                <span class="input__label-content input__label-content--hoshi"
+                                    style="margin-top: -13px;">Pincode</span>
                             </label>
                         </span>
                     </div>
-                    <div class="form-group"> <label for="billing_country" class="control-label">
-                            <select class="form-control" name="ui_country" id="ui_country" style="width:350px" required>
-                                <option value="" selected="selected">Select a country</option>
-                                <option value="India" selected="selected">India</option>
-                            </select>
+                    <div class="form-group">
+                        <select style="margin-top:20px;" class="form-control" name="ui_country" id="ui_country"
+                            required>
+                            <option value="" selected="selected">Select a country</option>
+                            <option value="India" selected="selected">India</option>
+                        </select>
                     </div>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="form-group address-field validate-required validate-postcode"> <label for="ui_feedback"
                             class="control-label">
                             <span style="color:#6a7989; font-weight:900">Feedback:</span>
                         </label> <textarea class="form-control" rows="4" cols="30" name="ui_feedback" id="ui_feedback"
-                            style="resize:none; margin: 0px 92.5px;width:954px; height: 125px;" placeholder=""
-                            value=""></textarea>
+                            aria-label="With textarea" placeholder="" value=""></textarea>
                     </div>
                 </div>
                 <div class="col-sm-12">

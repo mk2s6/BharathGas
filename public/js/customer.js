@@ -15,6 +15,11 @@ $(() => {
     const ui_feedback = $('#ui_feedback').val();
     const ui_pincode = $('#ui_pincode').val();
     const ui_secondary_mobile = $('#ui_secondary_mobile').val();
+    const ui_demand = $('#ui_demand').val();
+    const ui_demand_type = $('#ui_demand_type').val();
+    const ui_current_package = $('#ui_current_package').val();
+    const ui_current_pkg_type = $('#ui_current_pkg_type').val();
+    const ui_discount = $('#ui_discount').val();
 
     // if (ui_business_name === '' || ui_business_name === undefined || ui_business_name === null) {
     //   alert('Business Name can not be null');
@@ -50,8 +55,12 @@ $(() => {
       ui_feedback,
       ui_pincode,
       ui_secondary_mobile,
+      ui_demand,
+      ui_demand_type,
+      ui_current_package,
+      ui_current_pkg_type,
+      ui_discount,
     };
-console.log(data);
     $.ajax({
       type: 'POST',
       url: '/customer/add/new',
@@ -65,9 +74,8 @@ console.log(data);
         alert(e.responseJSON.message);
         if (e.status === 422) {
           e.responseJSON.errors.forEach((err) => {
-              console.log(err);
             alert(err.message);
-            $('#'+err.field).val('');
+            $(`#${err.field}`).val('');
           });
         }
       },
