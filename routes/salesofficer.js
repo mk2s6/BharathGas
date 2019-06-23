@@ -20,13 +20,13 @@ const SOIdPrefix = 'SAOFSK0';
  * Route for sales login page
  * @name /sales/login
  */
-router.get('/login', async (req, res) => res.render('salesOfficerLogin'));
+router.get('/login', auth.protectTokenVerify , async (req, res) => res.render('salesOfficerLogin'));
 
 /**
  * Route for sales home page
  * @name /sales/
  */
-router.get('/', auth.protectTokenCheck, async (req, res) => {
+router.get('/', auth.protectDistributorAccess, async (req, res) => {
   try {
     const [rows] = await pool.execute(
       `
@@ -69,7 +69,7 @@ router.get('/', auth.protectTokenCheck, async (req, res) => {
  */
 router.post(
   '/add/new',
-  auth.protectTokenCheck,
+  auth.protectDistributorAccess,
   [
     vs.isValidStrLenWithTrim('body', 'ui_name', 3, 50, 'Please enter a valid sales officer name between 3 to 50 characters'),
     vs.isMobile('body', 'ui_primary_mobile'),
@@ -275,13 +275,14 @@ router.post(
       try {
         token = auth.genAuthToken({
           id: qRespDistDetails[0].saof_id,
-          role: 'salesOfficer',
+          role: constant.defaultRoles.SALES_OFFICER,
           // Use JSON.parse instead of string.split() because JSON.parse convert it to array of numbers
           // but .split() convert it to array of strings. // branchID: qBranchIDList[0].branch_ids.split(','),
           [constant.tokenType.KEY]: constant.tokenType.value.SALES_OFFICER,
-          [constant.permissionKey.CUSTOMER_MANAGEMENT]: true,
+          [constant.permissionKey.CUSTOMER]: true,
           [constant.permissionKey.DISTRIBUTOR]: false,
-          [constant.permissionKey.SALES_OFFICER_MANAGEMENT]: false,
+          [constant.permissionKey.SALES_OFFICER]: true,
+          [constant.permissionKey.DELIVERY]: true,
         });
       } catch (e) {
         const responseGenerateTokenError = responseGenerator.internalError(error.errList.internalError.ERR_AUTH_TOKEN_GENERATION_ERROR);
@@ -327,7 +328,7 @@ router.post(
  *
  * @name /sales/register/delivery
  */
-router.get('/register/delivery', auth.protectTokenCheck, async (req, res) => {
+router.get('/register/delivery', auth.protectSalesAccess, async (req, res) => {
   res.render('deliveryRegistration');
 });
 

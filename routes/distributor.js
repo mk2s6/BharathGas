@@ -19,7 +19,7 @@ const router = express.Router();
  * Route for distributor home page
  * @name /distributor/
  */
-router.get('/', auth.protectTokenCheck, async (req, res) => res.render('distributorHome'));
+router.get('/', auth.protectDistributorAccess, async (req, res) => res.render('distributorHome'));
 
 /**
  * Route for distributor login page
@@ -90,13 +90,14 @@ router.post(
       try {
         token = auth.genAuthToken({
           id: qRespDistDetails[0].dist_id,
-          role: 'distributor',
+          role: constant.defaultRoles.DISTRIBUTOR,
           // Use JSON.parse instead of string.split() because JSON.parse convert it to array of numbers
           // but .split() convert it to array of strings. // branchID: qBranchIDList[0].branch_ids.split(','),
           [constant.tokenType.KEY]: constant.tokenType.value.DISTRIBUTOR,
-          [constant.permissionKey.CUSTOMER_MANAGEMENT]: true,
+          [constant.permissionKey.CUSTOMER]: true,
           [constant.permissionKey.DISTRIBUTOR]: true,
-          [constant.permissionKey.SALES_OFFICER_MANAGEMENT]: true,
+          [constant.permissionKey.SALES_OFFICER]: true,
+          [constant.permissionKey.DELIVERY]: true,
         });
       } catch (e) {
         const responseGenerateTokenError = responseGenerator.internalError(error.errList.internalError.ERR_AUTH_TOKEN_GENERATION_ERROR);
@@ -161,7 +162,7 @@ router.post(
 //  */
 // router.post(
 //   '/add/new',
-//   auth.protectDistributorMgmtRoute,
+  // auth.protectDistributorAccess,
 //   [
 //     vs.isValidStrLenWithTrim('body', 'ui_distributor_name', 3, 50, 'Please enter a valid distributor name between 3 to 50 characters only.'),
 //     vs.isEmail('body', 'ui_distributor_email'),
@@ -481,7 +482,7 @@ router.post(
  */
 router.put(
   '/change/password',
-  auth.protectTokenVerify,
+  auth.protectTokenCheck,
   [
     vs.isDistributorPassword('body', 'ui_current_password', constant.passwordValidatorResponses.COMPANY_DISTRIBUTOR_LOGIN_PWD_RESPONSE),
     vs.isDistributorPassword('body', 'ui_new_password', constant.passwordValidatorResponses.COMPANY_DISTRIBUTOR_REGISTER_PASSWORD_RESPONSE),
@@ -566,7 +567,7 @@ router.put(
  * @name /distributor/verify/email/resend
  *
  */
-router.post('/verify/email/resend', auth.protectTokenVerify, async (req, res) => {
+router.post('/verify/email/resend', auth.protectTokenCheck, async (req, res) => {
   // console.log(req.user);
   let rows;
   try {
@@ -861,7 +862,7 @@ router.get('/profile', auth.protectTokenCheck, async (req, res) => {
  * @param {image_field_name_in_the_front_end} distributor_image: distributor image field name in the form
  *
  */
-router.post('/profile/image/upload', auth.protectTokenVerify, async (req, res) => {
+router.post('/profile/image/upload', auth.protectTokenCheck, async (req, res) => {
   multer.uploadDistImage(req, res, async (err) => {
     if (err) {
       console.log(err);
@@ -905,7 +906,7 @@ router.post('/profile/image/upload', auth.protectTokenVerify, async (req, res) =
  *
  * @name /distributor/register/salesOfficer
  */
-router.get('/register/salesOfficer', auth.protectTokenCheck, async (req, res) => {
+router.get('/register/salesOfficer', auth.protectDistributorAccess, async (req, res) => {
   res.render('salesOfficerRegistration');
 });
 module.exports = router;

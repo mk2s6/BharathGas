@@ -35,7 +35,7 @@ const passport = require('passport');
 // const LocalStrategy = require('passport-local').Strategy;
 // // This is capital L because its constructor
 const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
+const { ExtractJwt } = require('passport-jwt');
 
 /**
  * Hash the given password. Before passing the password to this function
@@ -114,51 +114,53 @@ function genAuthTokenVerifyEmail(payload) {
 
 /**
  * function to extract user from the jwt using cookie
- * 
+ *
  */
 
- function cookieExtractor(req){
-   let token = false;
-   console.log('hello');
+function cookieExtractor(req) {
+  let token = false;
+  console.log('hello');
   console.log(req);
-   if(req && req.cookies)
-    token = req.cookies['x-id-token'];
+  if (req && req.cookies) token = req.cookies['x-id-token'];
   return token;
- }
+}
 
 // function authPassportJwtStrategy(params) {
-  
+
 // }
 
-passport.use(new JwtStrategy({
-  // These are needed because front end will send token in 'x-id-token'
-  jwtFromRequest: (req) => cookieExtractor(req),
-  secretOrKey: jwtSecret,
-},
-async (payload, done) => {
-  // console.log('object');
-  // Here payload if actual payload form the JWT so we can access its object directly
-  console.log(payload);
-  // Find user specified in token
-  // This part is not needed it will make response slow and token can't be tampered with but
-  // This is needed only in the case if user deletes its account and then
-  // try to access protected routes in this case token may be valid as it is signed by
-  // us and not yet expired but the user is not exist in the DB.
-  // This can be mitigated by having /logout route which add the blacklist token into our DB
-  // and in frontend deletes the given token.
-  // For now I will no do DB query to check for user but instead I will just add user
-  // to req.user object by calling done() method.
-  // NOTE: I can also fetch additional data here and append it to req.user,
-  // this fetch must be from in memory DB and not persistent
+passport.use(
+  new JwtStrategy(
+    {
+      // These are needed because front end will send token in 'x-id-token'
+      jwtFromRequest: req => cookieExtractor(req),
+      secretOrKey: jwtSecret,
+    },
+    async (payload, done) => {
+      // console.log('object');
+      // Here payload if actual payload form the JWT so we can access its object directly
+      console.log(payload);
+      // Find user specified in token
+      // This part is not needed it will make response slow and token can't be tampered with but
+      // This is needed only in the case if user deletes its account and then
+      // try to access protected routes in this case token may be valid as it is signed by
+      // us and not yet expired but the user is not exist in the DB.
+      // This can be mitigated by having /logout route which add the blacklist token into our DB
+      // and in frontend deletes the given token.
+      // For now I will no do DB query to check for user but instead I will just add user
+      // to req.user object by calling done() method.
+      // NOTE: I can also fetch additional data here and append it to req.user,
+      // this fetch must be from in memory DB and not persistent
 
-  // If user does not exist handle it.
-  // Here check if JWT is valid and not expired, if so redirect to login
+      // If user does not exist handle it.
+      // Here check if JWT is valid and not expired, if so redirect to login
 
-  // Otherwise return user to passport so that it can be added to req.user.
-  // Payload will be appended to req.user object
-  done(null, payload);
-}));
-
+      // Otherwise return user to passport so that it can be added to req.user.
+      // Payload will be appended to req.user object
+      done(null, payload);
+    },
+  ),
+);
 
 /**
  * authentication middle ware to check token of verify the email
@@ -181,12 +183,14 @@ function protectEmailVerify(req, res, next) {
     } catch (e) {
       console.log(e);
       if (e.name === 'TokenExpiredError') {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        return res.status(403).render('403');
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
       }
-      return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      return res.status(403).render('403');
     }
   } else {
-    return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    return res.status(403).render('403');
   }
 }
 
@@ -209,12 +213,15 @@ function protectResetPasswordRoute(req, res, next) {
     } catch (e) {
       console.log(e);
       if (e.name === 'TokenExpiredError') {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        return res.status(403).render('403');
       }
-      return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      return res.status(403).render('403');
     }
   } else {
-    return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    // return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    return res.status(403).render('403');
   }
 }
 /**
@@ -236,11 +243,11 @@ function protectTokenVerify(req, res, next) {
       req.user = payload;
       // console.log(req.user);
       switch (req.user.role) {
-        case 'distributor':
+        case constant.defaultRoles.DISTRIBUTOR:
           return res.redirect('/distributor');
-        case 'salesOfficer':
+        case constant.defaultRoles.SALES_OFFICER:
           return res.redirect('/sales');
-        case 'delivery':
+        case constant.defaultRoles.DELIVERY:
           return res.redirect('/delivery');
         default:
           return res.redirect('/');
@@ -292,23 +299,26 @@ function protectTokenCheck(req, res, next) {
     } catch (e) {
       console.log(e);
       if (e.name === 'TokenExpiredError') {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        return res.status(403).render('403');
       }
-      return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      return res.status(403).render('403');
     }
   } else {
-    return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    // return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    return res.status(403).render('403');
   }
 }
 
 /**
- * 
+ *
  * passport auth verification
  */
 
- function protectPassportTokenVerify(req, res, next) {
-  passport.authenticate('jwt', {session: false});
- }
+function protectPassportTokenVerify(req, res, next) {
+  passport.authenticate('jwt', { session: false });
+}
 
 /**
  * Route protection middleware for enquiry management route. It checks authorization based
@@ -317,7 +327,7 @@ function protectTokenCheck(req, res, next) {
  * @public
  */
 
-function protectEnquiryMgmtRoute(req, res, next) {
+function protectDistributorAccess(req, res, next) {
   const token = req.header(constant.TOKEN_NAME);
   // Token exist in request
   if (token) {
@@ -343,23 +353,27 @@ function protectEnquiryMgmtRoute(req, res, next) {
       // is invalid here
       // console.log(payload);
       // Invalid Role hence Not authorized
-      if (req.user[constant.permissionKey.ENQUIRY_MANAGEMENT] !== 1 || req.user[constant.tokenType.KEY] !== constant.tokenType.value.EMPLOYEE) {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
+      if (req.user[constant.permissionKey.DISTRIBUTOR] !== 1 || req.user[constant.tokenType.KEY] !== constant.tokenType.value.DISTRIBUTOR) {
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
+        return res.status(403).render('403');
       }
       next();
       return 0; // We will not reach here but to avoid eslint error we have this
     } catch (e) {
       if (e.name === 'TokenExpiredError') {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        return res.status(403).render('403');
       }
-      return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      return res.status(403).render('403');
     }
   } else {
-    return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    // return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    return res.status(403).render('403');
   }
 }
 
-function protectCompanySettingRoute(req, res, next) {
+function protectSalesAccess(req, res, next) {
   // console.log(req);
   const token = req.header(constant.TOKEN_NAME);
   // Token exist in request
@@ -386,21 +400,79 @@ function protectCompanySettingRoute(req, res, next) {
       // is invalid here
       // console.log(payload);
       // Invalid Role hence Not authorized
-      if (req.user[constant.permissionKey.COMPANY_SETTING] !== 1 || req.user[constant.tokenType.KEY] !== constant.tokenType.value.EMPLOYEE) {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
+      if (
+        req.user[constant.permissionKey.SALES_OFFICER] !== 1
+        || req.user[constant.tokenType.KEY] !== constant.tokenType.value.SALES_OFFICER
+      ) {
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
+        return res.status(403).render('403');
       }
       next();
       return 0; // We will not reach here but to avoid eslint error we have this
     } catch (e) {
       if (e.name === 'TokenExpiredError') {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        return res.status(403).render('403');
       }
-      return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      return res.status(403).render('403');
     }
   } else {
-    return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    // return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    return res.status(403).render('403');
   }
 }
+
+function protectDeliveryAccess(req, res, next) {
+  // console.log(req);
+  const token = req.header(constant.TOKEN_NAME);
+  // Token exist in request
+  if (token) {
+    try {
+      // Check whether we have earlier verified the token or not. If verified we have data
+      // of JWT already in req.user object.
+      // If we have verified the payload is available in req.user hence we can directly
+      // use that otherwise we need to verify it first.
+      // This is needed because we don't want to verify the content again and again when
+      // multiple route protections are used. For example in GET method we will probably
+      // not be going to use the protectCompanySetting or anything like that but we are
+      // certainly going to use the protectBranchAccess.
+      if (req.user === null || req.user === undefined) {
+        const payload = jwt.verify(token, jwtSecret);
+        req.user = payload;
+        // console.log(payload);
+      }
+      // TODO Call decode payload here
+      // TODO Add things we need from user table here
+      // TODO one scenario will fail here if user deletes his account
+      // to mitigate this we need to have /logout route on server too which just
+      // add the invalid tokens into the blacklist and here we check whether the token
+      // is invalid here
+      // console.log(payload);
+      // Invalid Role hence Not authorized
+      if (
+        req.user[constant.permissionKey.DELIVERY] !== 1
+        || req.user[constant.tokenType.KEY] !== constant.tokenType.value.DELIVERY
+      ) {
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
+        return res.status(403).render('403');
+      }
+      next();
+      return 0; // We will not reach here but to avoid eslint error we have this
+    } catch (e) {
+      if (e.name === 'TokenExpiredError') {
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        return res.status(403).render('403');
+      }
+      // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      return res.status(403).render('403');
+    }
+  } else {
+    // return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    return res.status(403).render('403');
+  }
+}
+
 
 /**
  * This middle ware is used to protect access to the branch information from the user
@@ -588,19 +660,23 @@ function protectTestResetPasswordRoute(req, res, next) {
       // console.log(payload);
       // Invalid Role hence Not authorized
       if (!(payload.role === constant.custRoles.COMPANY)) {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_ROLE_MISMATCH));
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_ROLE_MISMATCH));
+        return res.status(403).render('403');
       }
       req.user = payload;
       next();
       return 0; // We will not reach here but to avoid eslint error we have this
     } catch (e) {
       if (e.name === 'TokenExpiredError') {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        return res.status(403).render('403');
       }
-      return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      return res.status(403).render('403');
     }
   } else {
-    return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    // return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    return res.status(403).render('403');
   }
 }
 
@@ -620,19 +696,23 @@ function protectEmployeeResetPasswordRoute(req, res, next) {
       // Invalid Role hence Not authorized
       // Invalid Role hence Not authorized
       if (!payload.role.startsWith('FSJ_')) {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_ROLE_MISMATCH));
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_ROLE_MISMATCH));
+        return res.status(403).render('403');
       }
       req.user = payload;
       next();
       return 0; // We will not reach here but to avoid eslint error we have this
     } catch (e) {
       if (e.name === 'TokenExpiredError') {
-        return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_TOKEN_EXPIRED));
+        return res.status(403).render('403');
       }
-      return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_INVALID_TOKEN));
+      return res.status(403).render('403');
     }
   } else {
-    return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    // return res.status(401).send(responseGenerator.authError(error.errList.authError.ERR_PR_NO_TOKEN));
+    return res.status(403).render('403');
   }
 }
 
@@ -653,8 +733,9 @@ module.exports.genAuthTokenVerifyEmail = genAuthTokenVerifyEmail;
 module.exports.verifyPassword = verifyPassword;
 module.exports.protectTokenVerify = protectTokenVerify;
 module.exports.protectTokenCheck = protectTokenCheck;
-module.exports.protectEnquiryMgmtRoute = protectEnquiryMgmtRoute;
-module.exports.protectCompanySettingRoute = protectCompanySettingRoute;
+module.exports.protectDistributorAccess = protectDistributorAccess;
+module.exports.protectSalesAccess = protectSalesAccess;
+module.exports.protectDeliveryAccess = protectDeliveryAccess;
 module.exports.protectBranchAccess = protectBranchAccess;
 // module.exports.protectFSJEmpRoute = protectFSJEmpRoute;
 // module.exports.protectLtTableUpdate = protectLtTableUpdate;

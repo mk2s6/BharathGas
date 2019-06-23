@@ -51,12 +51,11 @@ const defaultFSJEmpRoles = {
 /**
  * This are the default role for company employees.
  */
-const defaultCompEmpRoles = {
-  OWNER: 'Owner',
-  BRANCH_ADMIN: 'Branch Admin',
-  COMPANY_ADMIN: 'Company Admin',
-  RECEPTIONIST: 'Receptionist',
-  SALES_AND_MARKETING: 'Sales and Marketing',
+const defaultRoles = {
+  DISTRIBUTOR: 'Distributor',
+  SALES_OFFICER: 'Sales Officer',
+  DELIVERY: 'Delivery',
+  CUSTOMER: 'Customer',
 };
 
 /**
@@ -101,17 +100,18 @@ const TOKEN_NAME = 'x-id-token';
 const tokenType = {
   KEY: 'tt',
   value: {
-    DISTRIBUTOR: 'dist', // Company Employee
-    SALES_OFFICER: 'saof', // FSJARS's Employee
+    DISTRIBUTOR: 'dist', 
+    SALES_OFFICER: 'saof', 
     DELIVERY: 'delv',
     CUSTOMER: 'cust',
   },
 };
 
 const permissionKey = {
-  CUSTOMER_MANAGEMENT: 'p_com',
+  CUSTOMER: 'p_com',
   DISTRIBUTOR: 'p_d',
-  SALES_OFFICER_MANAGEMENT: 'p_som',
+  SALES_OFFICER: 'p_som',
+  DELIVERY: 'p_del',
 };
 
 /**
@@ -262,7 +262,7 @@ module.exports.defaultEmpImages = defaultEmpImages;
 module.exports.defaultCompImages = defaultCompImages;
 module.exports.defaultCompEmpImages = defaultCompEmpImages;
 module.exports.defaultFSJEmpRoles = defaultFSJEmpRoles;
-module.exports.defaultCompEmpRoles = defaultCompEmpRoles;
+module.exports.defaultRoles = defaultRoles;
 module.exports.defaultCompEmpAddedBy = defaultCompEmpAddedBy;
 module.exports.defaultCompRoleAddedBy = defaultCompRoleAddedBy;
 module.exports.defaultNumberOfRoles = defaultNumberOfRoles;

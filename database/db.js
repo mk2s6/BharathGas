@@ -62,7 +62,7 @@ pool.on('connection', (conn) => {
 // This uses prepare statement hence it should be prefered
 if (config.get('environment') !== 'test') {
   pool.execute('SELECT 1 + 1 AS solution', (error, results) => {
-    if (error) console.log(error);
+    if (error) throw error;
     console.log('Connection to DB is successful and answer to query is : ', results[0].solution);
   });
 }

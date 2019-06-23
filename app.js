@@ -153,7 +153,10 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.status(err.status || 500).render('error');
+  if (err.status === 404) {
+    return res.status(404).render('404')
+  }
+  return res.status( 500).render('error');
   // res.send(responseGenerator.errorResponse('Not Found', err.status, 'Resource you are trying to access is not found', '', req.url));
 });
 

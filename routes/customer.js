@@ -28,11 +28,11 @@ const router = express.Router();
  */
 router.get('/add/new', auth.protectTokenCheck, async (req, res) => {
   switch (req.user.role) {
-    case 'distributor':
+    case constant.defaultRoles.DISTRIBUTOR:
       return res.render('customerRegistration');
-    case 'salesOfficer':
+    case constant.defaultRoles.SALES_OFFICER:
       return res.render('customerRegistrationSales');
-      case 'delivery':
+      case constant.defaultRoles.DELIVERY:
         return res.render('customerRegistrationDelivery');
     default:
       return res.status(403).render(error);
@@ -211,11 +211,11 @@ function pad(number, length) {
 router.get('/list', auth.protectTokenCheck, async (req, res) => {
   // console.log(req.user.role);
   switch (req.user.role) {
-    case 'distributor':
+    case constant.defaultRoles.DISTRIBUTOR:
       return res.render('customerList');
-    case 'salesOfficer':
+    case constant.defaultRoles.SALES_OFFICER:
       return res.render('customerListSales');
-      case 'delivery':
+      case constant.defaultRoles.DELIVERY:
         return res.render('customerListDelivery');
     default:
       return res.status(403).render(error);
@@ -248,11 +248,11 @@ router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
  */
 router.get('/details', auth.protectTokenCheck, async (req, res) => {
   switch (req.user.role) {
-    case 'distributor':
+    case constant.defaultRoles.DISTRIBUTOR:
       return res.render('customerDetails');
-    case 'salesOfficer':
+    case constant.defaultRoles.SALES_OFFICER:
       return res.render('customerDetailsSales');
-      case 'delivery':
+      case constant.defaultRoles.DELIVERY:
         return res.render('customerDetailsDelivery');
     default:
       return res.status(403).render(error);
