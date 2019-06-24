@@ -1,8 +1,8 @@
 
-$(() => {
+$(function(){
   // const submit = $('submit');
   const loginForm = $('#loginForm');
-  loginForm.on('submit', (event) => {
+  loginForm.on('submit', function (event) {
     event.preventDefault();
     const ui_username = $('#username').val();
     const ui_password = $('#password').val();
@@ -15,15 +15,15 @@ $(() => {
       || ui_password !== null
     ) {
       const loginDetails = {
-        ui_username,
-        ui_password,
+        ui_username : ui_username,
+        ui_password : ui_password,
       };
       $.ajax({
         url: '/distributor/login',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(loginDetails),
-        success(data, status, request) {
+        success: function(data, status, request) {
           if (typeof data === 'string') {
             window.location = '/';
           } else {
@@ -34,10 +34,10 @@ $(() => {
             window.location = '/';
           }
         },
-        error(e, ts, et) {
+        error: function(e, ts, et) {
           alert(e.responseJSON.message);
           if (e.status === 422) {
-            e.responseJSON.errors.forEach((err) => {
+            e.responseJSON.errors.forEach( function(err) {
               alert(err.message);
             });
           }

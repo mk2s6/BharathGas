@@ -1,29 +1,29 @@
-$(() => {
-  const customerTemplate = `
-    <tr>
-    <td>{{sNo}}</td>
-    <td>{{businessName}}</td>
-    <td>{{proprietorName}}</td>
-    <td>{{omc}}</td>
-    <td>
-        <a class="ubtn-link ult-adjust-bottom-margin ubtn-left ubtn-normal" rel="" href="/customer/details?cust_id={{sNo}}">
-            <center>
-                <button type="button" id="ubtn-5241" class="ubtn ult-adjust-bottom-margin ult-responsive ubtn-normal ubtn-left-bg  none  ubtn-left   tooltip-5b7e3f547613a" data-hover="#ffffff" data-border-color="" data-bg="#22a6d6" data-hover-bg="#545454" data-border-hover="" data-shadow-hover="" data-shadow-click="none" data-shadow="" data-shd-shadow="" data-ultimate-target="#ubtn-5241" data-responsive-json-new="{" font-size':'','line-height':''}'="" style="padding:5px;font-weight:normal;border:none;background: #22a6d6;color: #ffffff;">
-                    <span class="ubtn-hover" style="background-color:#545454"></span>
-                    <span class="ubtn-data ubtn-text ">View profile</span>
-                </button>
-            </center>
-        </a>
-    </td>
-</tr>
-                        `;
+$(function () {
+  const customerTemplate = "\
+    <tr>\
+    <td>{{sNo}}</td>\
+    <td>{{businessName}}</td>\
+    <td>{{proprietorName}}</td>\
+    <td>{{omc}}</td>\
+    <td>\
+        <a class='ubtn-link ult-adjust-bottom-margin ubtn-left ubtn-normal' rel='' href='/customer/details?cust_id={{sNo}}'>\
+            <center>\
+                <button type='button' id='ubtn-5241' class='ubtn ult-adjust-bottom-margin ult-responsive ubtn-normal ubtn-left-bg  none  ubtn-left   tooltip-5b7e3f547613a' data-hover='#ffffff' data-border-color='' data-bg='#22a6d6' data-hover-bg='#545454' data-border-hover='' data-shadow-hover='' data-shadow-click='none' data-shadow='' data-shd-shadow='' data-ultimate-target='#ubtn-5241' data-responsive-json-new='{' font-size':'','line-height':''}'='' style='padding:5px;font-weight:normal;border:none;background: #22a6d6;color: #ffffff;'>\
+                    <span class='ubtn-hover' style='background-color:#545454'></span>\
+                    <span class='ubtn-data ubtn-text '>View profile</span>\
+                </button>\
+            </center>\
+        </a>\
+    </td>\
+</tr>\
+                        ";
   function display(customerList) {
     const customerContent = $('#customer_tbody');
     customerContent.html('');
     console.log(customerList);
-    $.each(customerList, (i, customer) => {
+    $.each(customerList, function (i, customer) {
     //   customer.i = i;
-    // console.log(customerContent);
+    // console.log(customerContent);\
       customerContent.append(Mustache.render(customerTemplate, customer));
     });
     if (customerList.length === 0 && count >= 0) {
@@ -33,13 +33,15 @@ $(() => {
     // if (customerList.length < 5) next.attr('disabled', 'true');
     // if (customerList.length >= 5) next.removeAttr('disabled', 'true');
   }
-
-  $(window).on('load', () => {
+  $(window).ready(function (event) {
+  console.log('object');
+    // event.preventDefault();
     $.ajax({
       type: 'GET',
       async: false,
+      contentType: 'application/json',
       url: '/customer/list/all',
-      success(response) {
+      success: function(response) {
           console.log(response);
           if (response.data.items.length === 0) {
             alert('Customer does not exist please provide valid details');
@@ -49,13 +51,13 @@ $(() => {
             display(response.data.items);
           }
       },
-      error(e) {
+      error: function(e) {
         alert(e.responseJSON.message);
         if (e.status === 422) {
-          e.responseJSON.errors.forEach((err) => {
+          e.responseJSON.errors.forEach( function(err) {
             console.log(err);
             alert(err.message);
-            $(`#${err.field}`).val('');
+            $('#'+err.field).val('');
           });
         }
       },

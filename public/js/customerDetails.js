@@ -1,11 +1,12 @@
-$(() => {
+$(function () {
   let custId;
   // console.log(window.location.search.substring(1));
   const queryParams = window.location.search.substring(1).split('&');
-  $.each(queryParams, (i, param) => {
-    const [paramName, value] = param.split('=');
-    if (paramName === 'cust_id') {
-      custId = value;
+  $.each(queryParams, function (i, param)  {
+    const params = param.split('=');
+    // console.log(params);
+    if (params[i] === 'cust_id') {
+      custId = params[i+1];
     }
   });
 
@@ -28,34 +29,34 @@ $(() => {
     $('#ui_demand').html(customer.demand);
     $('#ui_package').html(customer.package);
     $('#ui_discount').html(customer.discount);
-    let mapLoc = `<iframe width="100%" height="600"  frameborder="0"
-    src='https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=${customer.latitude},${customer.longitude}&amp;ie=UTF8&amp;t=&amp;z=19&amp;iwloc=B&amp;output=embed'
-    scrolling="no" marginheight="0" marginwidth="0"><a
-      href="https://www.maps.ie/map-my-route/">Map a route</a></iframe>
-    `;
-    console.log(mapLoc);
+    let mapLoc = "<iframe width='100%' height='600'  frameborder='0'\
+    src='https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q="+customer.latitude+","+customer.longitude+"&amp;ie=UTF8&amp;t=&amp;z=19&amp;iwloc=B&amp;output=embed'\
+    scrolling='no' marginheight='0' marginwidth='0'><a\
+      href='https://www.maps.ie/map-my-route/'>Map a route</a></iframe>\
+    ";
+    // console.log(mapLoc);
     $('#custLocation').html(mapLoc);
   }
 
-  $(window).on('load', (e) => {
-    e.preventDefault();
+  $(window).ready(function (e)  {
     $.ajax({
       type: 'GET',
-      url: `/customer/details/${custId}`,
-      success(response) {
+      contentType: 'application/json',
+      url: '/customer/details/'+custId,
+      success: function(response) {
         if (response.data.items.length === 0) {
-          alert('Customer does not exist please provide valid details');
+          alert('Customer does not exist.!');
           window.history.back();
         } else {
           alert(response.data.description);
           displayCustomer(response.data.items[0]);
         }
       },
-      error(e) {
+      error: function(e) {
         alert(e.responseJSON.message);
         if (e.status === 422) {
           window.history.back();
-          // e.responseJSON.errors.forEach((err) => {
+          // e.responseJSON.errors.forEach( function (err)  {
           //   console.log(err);
           //   alert(err.message);
           //   $(`#${err.field}`).val('');
