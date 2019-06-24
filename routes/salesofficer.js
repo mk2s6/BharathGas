@@ -333,4 +333,96 @@ router.get('/register/delivery', auth.protectSalesAccess, async (req, res) => {
   res.render('deliveryRegistration');
 });
 
+/**
+ * Change password route of a sales
+ *
+ * @name /sales/change/password
+ *
+ * @param {string} ui_current_password current password of the sales
+ * @param {string} ui_new_password new password of the sales
+ */
+router.put(
+  '/change/password',
+  auth.protectTokenCheck,
+  [
+    vs.isDistributorPassword('body', 'ui_current_password', constant.passwordValidatorResponses.COMPANY_DISTRIBUTOR_LOGIN_PWD_RESPONSE),
+    vs.isDistributorPassword('body', 'ui_new_password', constant.passwordValidatorResponses.COMPANY_DISTRIBUTOR_REGISTER_PASSWORD_RESPONSE),
+  ],
+  async (req, res, next) => {
+    // Get validation Result
+    const errors = vs.getValidationResult(req);
+    if (!errors.isEmpty()) {
+      const fieldsToValidate = ['ui_current_password', 'ui_new_password'];
+      // This is if else so we don't need return
+      return res.status(400).send(responseGenerator.validationError(errors.mapped(), fieldsToValidate));
+    }
+    const beUserID = req.user.id;
+    // TODO Used Matched Data and used that to insert only
+    const beCurrentPassword = req.body.ui_current_password;
+    const beNewPassword = req.body.ui_new_password;
+    let beHashedPassword = '';
+    let rows;
+    try {
+      [rows] = await pool.execute('SELECT saof_pwd as current_password FROM sales_officer WHERE saof_id = ?', [beUserID]);
+    } catch (err) {
+      const responseUnableToChange = responseGenerator.internalError(
+        error.errList.internalError.ERR_SELECT_QUERY_USER_CHANGE_PASSWORD_FAILURE,
+      );
+      return res.status(400).send(responseUnableToChange);
+    }
+    if (rows.length) {
+      let isValidPassword;
+      try {
+        isValidPassword = await auth.verifyPassword(beCurrentPassword, rows[0].current_password);
+      } catch (e) {
+        // Unable to compare hash and Password
+        // console.log(e);
+        const responseUnableToCompareHash = responseGenerator.internalError(error.errList.internalError.ERR_COMPARE_PASSWORD_AND_HASH);
+        return res.status(400).send(responseUnableToCompareHash);
+      }
+      if (!isValidPassword) {
+        const responsePasswordNoMatch = responseGenerator.dbError(error.errList.dbError.ERR_USER_CHANGE_PASSWORD_NO_MATCH);
+        return res.status(400).send(responsePasswordNoMatch);
+      }
+      try {
+        // NOTE We need to await this function as it is async
+        beHashedPassword = await hash.hashPassword(beNewPassword);
+      } catch (e) {
+        // Unable to hash Password
+        const responseUnableToHash = responseGenerator.internalError(error.errList.internalError.ERR_HASH_PASSWORD);
+        return res.status(500).send(responseUnableToHash);
+      }
+      try {
+        const [rows] = await pool.execute(
+          `UPDATE sales_officer
+                  SET saof_pwd = ?
+                  WHERE saof_id = ?`,
+          [beHashedPassword, beUserID],
+        );
+        // Change password successfully
+        if (rows.affectedRows) {
+          const description = 'Password have been updated successfully for the manager';
+          return res.status(200).send(responseGenerator.success('Change password', description, []));
+        }
+        // Unsuccessfully update with no exception
+        const responseUnableToUpdateWithoutException = responseGenerator.internalError(
+          error.errList.internalError.ERR_USER_UPDATE_PASSWORD_NO_UPDATE_NO_EXCEPTION,
+        );
+        return res.status(400).send(responseUnableToUpdateWithoutException);
+      } catch (e) {
+        console.log(e)
+        const responseUnableToUpdate = responseGenerator.internalError(
+          error.errList.internalError.ERR_USER_CHANGE_PASSWORD_FAILURE_UPDATE_QUERY,
+        );
+        return res.status(400).send(responseUnableToUpdate);
+      }
+    } else {
+      const responseUnableToUpdate = responseGenerator.internalError(error.errList.internalError.ERR_USER_CHANGE_PASSWORD_CAN_NOT_BE_DONE);
+      return res.status(400).send(responseUnableToUpdate);
+    }
+  },
+);
+
+
+
 module.exports = router;

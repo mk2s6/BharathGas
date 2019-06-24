@@ -101,21 +101,20 @@
                             </div>
                             <div class="modal-body">
                                 <div calss="container-fluid">
-                                    <form class="form-horizontal tpad" role="form" method="post" action=""
-                                        enctype="multipart/form-data">
+                                    <form class="form-horizontal tpad" autocomplete="off">
                                         <div class="form-group">
                                             <div class="col-md-2"></div>
                                             <div class="col-md-8">
-                                                <input type="password" name="ui_current_password" class="form-control"
+                                                <input type="password" name="ui_current_password" autocomplete="off" class="form-control"
                                                     id="ui_current_password" placeholder="Current Password" required>
-                                                <input type="password" name="ui_new_password" style="margin-top:15px;"
+                                                <input type="password" name="ui_new_password" autocomplete="off" style="margin-top:15px;"
                                                     class="form-control" id="ui_new_password" placeholder="New Password"
                                                     required>
                                                 <input type="password" name="ui_re_new_password"
-                                                    style="margin-top:15px;" class="form-control"
+                                                    style="margin-top:15px;" autocomplete="off" class="form-control"
                                                     id="ui_re_new_password" placeholder="Re-Enter New Password"
                                                     required>
-                                                <button type="submit" style="margin-top:15px;" name="quick_apply"
+                                                <button type="button"  id="ui_change_password"  style="margin-top:15px;" name="quick_apply"
                                                     class="btn btn-primary pull-right">Change Password</button>
                                             </div>
                                         </div>
@@ -133,7 +132,7 @@
         </div>
     </div>
 </section>
-<script type="text/javascript">
+{{!-- <script type="text/javascript">
     $(function () {
         const fields = $(".sa_field");
         fields.prop("disabled", true);
@@ -145,6 +144,11 @@
                 fields.attr("disabled", true)
         });
     });
-</script>
+</script> --}}
+
+
+<script src="js/classie.js"></script>
+<script src="js/stable.js"></script>
+<script src="js/managerChangePassword.js"></script>
 
 {{> footer-end}}

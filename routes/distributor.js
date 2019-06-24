@@ -248,7 +248,7 @@ router.post(
 //             SELECT dist_name AS name
 //             FROM distributor WHERE dist_id = ?;
 //           `,
-//           [req.user.id, req.user.cid],
+//           [req.user.id],
 //         );
 //         // console.log(distributorDetails);
 //       } catch (e) {
@@ -283,11 +283,11 @@ router.post(
 //             beDistSecondaryMobile,
 //             req.body.ui_distributor_gender,
 //             req.body.ui_distributor_role,
-//             req.user.cid,
+//           ,
 //             req.ip,
 //             req.user.id,
 //             distributorDetails[0].name,
-//             req.user.cid,
+//           ,
 //           ],
 //         );
 //         // console.log(companyDistInsert);
@@ -353,7 +353,7 @@ router.post(
 //           compDistBranchLinkInsertQuery += ' (?, ?, ?, ?, ?); ';
 //         }
 //         // console.log(distributorDetails[0].name);
-//         compDistBranchLinkInsertValues.push(companyDistInsert.insertId, companyDistBranchList[i].id, req.user.id, distributorDetails[0].name, req.user.cid);
+//         compDistBranchLinkInsertValues.push(companyDistInsert.insertId, companyDistBranchList[i].id, req.user.id, distributorDetails[0].name);
 //       });
 //       try {
 //         [companyDistBranchLink] = await conn.query(compDistBranchLinkInsertQuery, compDistBranchLinkInsertValues);
@@ -390,7 +390,7 @@ router.post(
 //         token = auth.genAuthTokenVerifyEmail({
 //           id: companyDistInsert.insertId,
 //           username: req.body.ui_distributor_name,
-//           cid: req.user.cid,
+//           cid,
 //           emailVerify: true,
 //         });
 //         emailVerifyTokenGenerated = true;
@@ -503,10 +503,10 @@ router.put(
     let beHashedPassword = '';
     let rows;
     try {
-      [rows] = await pool.execute('SELECT dist_pwd as current_password FROM distributor WHERE dist_id = ?', [beUserID, req.user.cid]);
+      [rows] = await pool.execute('SELECT dist_pwd as current_password FROM distributor WHERE dist_id = ?', [beUserID]);
     } catch (err) {
       const responseUnableToChange = responseGenerator.internalError(
-        error.errList.internalError.ERR_SELECT_QUERY_DISTRIBUTOR_CHANGE_PASSWORD_FAILURE,
+        error.errList.internalError.ERR_SELECT_QUERY_USER_CHANGE_PASSWORD_FAILURE,
       );
       return res.status(400).send(responseUnableToChange);
     }
@@ -521,7 +521,7 @@ router.put(
         return res.status(400).send(responseUnableToCompareHash);
       }
       if (!isValidPassword) {
-        const responsePasswordNoMatch = responseGenerator.dbError(error.errList.dbError.ERR_DISTRIBUTOR_CHANGE_PASSWORD_NO_MATCH);
+        const responsePasswordNoMatch = responseGenerator.dbError(error.errList.dbError.ERR_USER_CHANGE_PASSWORD_NO_MATCH);
         return res.status(400).send(responsePasswordNoMatch);
       }
       try {
@@ -535,9 +535,9 @@ router.put(
       try {
         const [rows] = await pool.execute(
           `UPDATE distributor
-                  SET dist_pwd = ?, dist_modified_by = dist_id, dist_modified_by_name = dist_name
+                  SET dist_pwd = ?
                   WHERE dist_id = ?`,
-          [beHashedPassword, beUserID, req.user.cid],
+          [beHashedPassword, beUserID],
         );
         // Change password successfully
         if (rows.affectedRows) {
@@ -546,17 +546,18 @@ router.put(
         }
         // Unsuccessfully update with no exception
         const responseUnableToUpdateWithoutException = responseGenerator.internalError(
-          error.errList.internalError.ERR_DISTRIBUTOR_UPDATE_PASSWORD_NO_UPDATE_NO_EXCEPTION,
+          error.errList.internalError.ERR_USER_UPDATE_PASSWORD_NO_UPDATE_NO_EXCEPTION,
         );
         return res.status(400).send(responseUnableToUpdateWithoutException);
       } catch (e) {
+        console.log(e)
         const responseUnableToUpdate = responseGenerator.internalError(
-          error.errList.internalError.ERR_DISTRIBUTOR_CHANGE_PASSWORD_FAILURE_UPDATE_QUERY,
+          error.errList.internalError.ERR_USER_CHANGE_PASSWORD_FAILURE_UPDATE_QUERY,
         );
         return res.status(400).send(responseUnableToUpdate);
       }
     } else {
-      const responseUnableToUpdate = responseGenerator.internalError(error.errList.internalError.ERR_DISTRIBUTOR_CHANGE_PASSWORD_CAN_NOT_BE_DONE);
+      const responseUnableToUpdate = responseGenerator.internalError(error.errList.internalError.ERR_USER_CHANGE_PASSWORD_CAN_NOT_BE_DONE);
       return res.status(400).send(responseUnableToUpdate);
     }
   },
@@ -576,7 +577,7 @@ router.post('/verify/email/resend', auth.protectTokenCheck, async (req, res) => 
       `SELECT dist_id, dist_name, dist_email ,dist_is_email_verified, dist_comp_id
        FROM distributor 
        WHERE dist_id = ?;`,
-      [req.user.id, req.user.cid],
+      [req.user.id],
     );
   } catch (e) {
     console.log(e);
@@ -661,7 +662,7 @@ router.put('/verify/email/confirm', auth.protectEmailVerify, async (req, res) =>
   try {
     const [rows] = await pool.execute(
       'UPDATE distributor SET dist_is_email_verified = ?, dist_modified_by = dist_id, dist_modified_by_name = dist_name WHERE dist_id = ?',
-      [constant.emailVerifiedCode.CODE, req.user.id, req.user.cid],
+      [constant.emailVerifiedCode.CODE, req.user.id],
     );
     if (rows.affectedRows === 1) {
       return res.status(200).send(responseGenerator.success('Email Verification', 'Email verified successfully', []));
@@ -791,7 +792,7 @@ router.put(
         `UPDATE distributor
           SET dist_pwd = ?, dist_modified_by = dist_id, dist_modified_by_name = dist_name
           WHERE dist_id = ?`,
-        [beHashedPassword, req.user.id, req.user.cid],
+        [beHashedPassword, req.user.id],
       );
       // Change password successfully
       if (rows.affectedRows) {
@@ -888,7 +889,7 @@ router.post('/profile/image/upload', auth.protectTokenCheck, async (req, res) =>
       const filePath = constant.distributorImageStorageBaseLocation.PATH + req.file.filename;
       // console.log(filePath);
       try {
-        const [rows] = await pool.execute('UPDATE distributor SET dist_image = ?  WHERE dist_id = ?', [filePath, req.user.id, req.user.cid]);
+        const [rows] = await pool.execute('UPDATE distributor SET dist_image = ?  WHERE dist_id = ?', [filePath, req.user.id]);
         if (rows.affectedRows !== 1) {
           const errDistImageUploadUpdateDBNoUpdateNOExp = error.errList.internalError.ERR_EMP_IMG_UPLOAD_DB_UPDATE_NO_UPDATE_NO_EXCEPTION;
           return res.status(404).send(responseGenerator.internalError(errDistImageUploadUpdateDBNoUpdateNOExp));

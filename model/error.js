@@ -118,14 +118,19 @@ const errList = {
       internalDescription: `Insertion of details of a employee fails,
        there is a duplicate entry with the same details`,
     },
-    ERR_COMPANY_DISTRIBUTOR_LOGIN_DISTRIBUTOR_DOES_NOT_EXIST:{
+    ERR_COMPANY_DISTRIBUTOR_LOGIN_DISTRIBUTOR_DOES_NOT_EXIST: {
       code: '30012',
       message: 'Please enter a valid username and password',
       internalDescription: `Login to the distributor login is a failure as the distributor does not exist in DB`,
     },
-    ERR_SALES_OFFICER_DOES_NOT_EXIST:{
+    ERR_SALES_OFFICER_DOES_NOT_EXIST: {
       code: '30013',
       message: 'Please enter a valid username and password',
+      internalDescription: `Login to the sales officer login is a failure as the sales officer does not exist in DB`,
+    },
+    ERR_USER_CHANGE_PASSWORD_NO_MATCH: {
+      code: '30014',
+      message: 'Current password does not match with the existing password.!',
       internalDescription: `Login to the sales officer login is a failure as the sales officer does not exist in DB`,
     }
   },
@@ -236,6 +241,26 @@ const errList = {
       code: '50018',
       message: errMsg.INTERNAL_SERVER_ERROR,
       internalDescription: 'There is an error while committing the transaction',
+    },
+    ERR_SELECT_QUERY_USER_CHANGE_PASSWORD_FAILURE: {
+      code: '50019',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'Select query to get the distributor details to change password failure',
+    },
+    ERR_USER_UPDATE_PASSWORD_NO_UPDATE_NO_EXCEPTION: {
+      code: '50020',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'update password failure for user with rows = 0',
+    },
+    ERR_USER_CHANGE_PASSWORD_FAILURE_UPDATE_QUERY: {
+      code: '50021',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'update password query failure for user',
+    },
+    ERR_USER_CHANGE_PASSWORD_CAN_NOT_BE_DONE: {
+      code: '50022',
+      message: 'Please login again to continue',
+      internalDescription: 'change passowrd can not be done as the user details does not match with db',
     },
   },
 };
