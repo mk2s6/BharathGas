@@ -36,6 +36,9 @@ $(function () {
     ";
     // console.log(mapLoc);
     $('#custLocation').html(mapLoc);
+    $('#ui_mobile_call').attr('href', 'tel:+91'+customer.primaryMobile);
+    $('#ui_mobile_msg').attr('href', 'tel:+91'+customer.primaryMobile);
+
   }
 
   $(window).ready(function (e)  {
