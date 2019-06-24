@@ -1,5 +1,5 @@
 
-$(() => {
+$(function() {
     // const submit = $('submit');
     console.log('object');
     const loginForm = $('#loginForm');
@@ -24,7 +24,7 @@ $(() => {
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(loginDetails),
-          success(data, status, request) {
+          success: function(data, status, request) {
             if (typeof data === 'string') {
               window.location = '/';
             } else {
@@ -35,7 +35,7 @@ $(() => {
               window.location = '/';
             }
           },
-          error(e, ts, et) {
+          error: function(e, ts, et) {
             alert(e.responseJSON.message);
             if (e.status === 422) {
               e.responseJSON.errors.forEach((err) => {

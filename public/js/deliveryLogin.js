@@ -1,9 +1,9 @@
 
-$(() => {
+$(function() {
     // const submit = $('submit');
     console.log('object');
     const loginForm = $('#loginForm');
-    loginForm.on('submit', (event) => {
+    loginForm.on('submit', function(event) {
       event.preventDefault();
       const ui_username = $('#ui_username').val();
       const ui_password = $('#ui_password').val();
@@ -24,7 +24,7 @@ $(() => {
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(loginDetails),
-          success(data, status, request) {
+          success: function(data, status, request) {
             if (typeof data === 'string') {
               window.location = '/';
             } else {
@@ -35,10 +35,10 @@ $(() => {
               window.location = '/';
             }
           },
-          error(e, ts, et) {
+          error: function(e, ts, et) {
             alert(e.responseJSON.message);
             if (e.status === 422) {
-              e.responseJSON.errors.forEach((err) => {
+              e.responseJSON.errors.forEach( function (err) {
                 alert(err.message);
               });
             }

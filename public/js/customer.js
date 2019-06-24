@@ -1,5 +1,5 @@
-$(() => {
-  $('#registerCustomer').on('click', (e) => {
+$(function () {
+  $('#registerCustomer').on('click', function(e){
     e.preventDefault();
     const ui_business_name = $('#ui_business_name').val();
     const ui_proprietor_name = $('#ui_proprietor_name').val();
@@ -66,16 +66,16 @@ $(() => {
       url: '/customer/add/new',
       data,
       dataType: 'json',
-      success(response) {
+      success: function(response) {
         alert(response.data.description);
         window.location = '/';
       },
-      error(e) {
+      error: function(e) {
         alert(e.responseJSON.message);
         if (e.status === 422) {
-          e.responseJSON.errors.forEach((err) => {
+          e.responseJSON.errors.forEach(function(err) {
             alert(err.message);
-            $(`#${err.field}`).val('');
+            $('#'+err.field).val('');
           });
         }
       },

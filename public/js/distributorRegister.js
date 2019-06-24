@@ -1,5 +1,5 @@
-$(() => {
-    $('#register_so').on('click', (e) => {
+$(function() {
+    $('#register_so').on('click', function(e) {
       e.preventDefault();
       const ui_name = $('#ui_name').val();
       const ui_primary_mobile = $('#ui_primary_mobile').val();
@@ -27,17 +27,17 @@ $(() => {
         url: '/delivery/add/new',
         data,
         dataType: 'json',
-        success(response) {
+        success: function(response) {
           alert(response.data.description);
           window.location = '/';
         },
-        error(e) {
+        error: function(e) {
           alert(e.responseJSON.message);
           if (e.status === 422) {
-            e.responseJSON.errors.forEach((err) => {
+            e.responseJSON.errors.forEach(function(err) {
               console.log(err);
               alert(err.message);
-              $(`#${err.field}`).val('');
+              $('#'+err.field).val('');
             });
           }
         },
