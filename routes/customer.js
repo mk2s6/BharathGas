@@ -349,7 +349,7 @@ router.get(
     let query =         `SELECT cust_name AS proprietorName, cust_business_name AS businessName, 
     cust_remarks AS feedback, cust_email AS email, cust_primary_mobile AS primaryMobile, cust_secondary_mobile AS secondaryMobile, 
     cust_address AS address, cust_city AS city, cust_state AS state, cust_country AS country, cust_pincode AS pincode,
-    CONCAT(  cust_added_by_type, ': ', cust_added_by_name) AS addedBy, 
+    CONCAT(  cust_added_by_type, ': ', cust_added_by_name) AS addedBy, cust_loc_lat AS latitude, cust_loc_lon AS longitude,
     (SELECT cdi_company_used FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS omc,
     (SELECT CONCAT(  cdi_demand_per_month, cdi_demand_per_month_type) FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS demand,
     (SELECT CONCAT(  cdi_package, cdi_package_type) FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS package,

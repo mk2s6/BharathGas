@@ -11,7 +11,7 @@ $(() => {
 
   function displayCustomer(customer) {
     //   const businessName =
-    console.log(customer);
+    // console.log(customer);
     $('#ui_business_name').html(customer.businessName);
     $('#ui_proprietor_name').html(customer.proprietorName);
     $('#ui_primary_mobile').html(customer.primaryMobile);
@@ -28,6 +28,13 @@ $(() => {
     $('#ui_demand').html(customer.demand);
     $('#ui_package').html(customer.package);
     $('#ui_discount').html(customer.discount);
+    let mapLoc = `<iframe width="100%" height="600"  frameborder="0"
+    src='https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=${customer.latitude},${customer.longitude}&amp;ie=UTF8&amp;t=&amp;z=19&amp;iwloc=B&amp;output=embed'
+    scrolling="no" marginheight="0" marginwidth="0"><a
+      href="https://www.maps.ie/map-my-route/">Map a route</a></iframe>
+    `;
+    console.log(mapLoc);
+    $('#custLocation').html(mapLoc);
   }
 
   $(window).on('load', (e) => {
