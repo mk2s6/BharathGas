@@ -283,8 +283,8 @@ router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
       // query += true;
       break; 
     case constant.defaultRoles.SALES_OFFICER:
-      query += ' WHERE  cust_added_by = ? AND cust_added_by_type = ?;'
-      queryParams.push(req.user.id, req.user.role);
+      // query += ' WHERE  cust_added_by = ? AND cust_added_by_type = ?;'
+      // queryParams.push(req.user.id, req.user.role);
       break;
     case constant.defaultRoles.DELIVERY:
       query += ' WHERE  cust_added_by = ? AND cust_added_by_type = ?;'
@@ -361,8 +361,6 @@ router.get(
       case constant.defaultRoles.DISTRIBUTOR:
         break; 
       case constant.defaultRoles.SALES_OFFICER:
-        query += ' AND cust_added_by = ? AND cust_added_by_type = ?;'
-        queryParams.push(req.user.id, req.user.role);
         break;
       case constant.defaultRoles.DELIVERY:
         query += ' AND cust_added_by = ? AND cust_added_by_type = ?;'
