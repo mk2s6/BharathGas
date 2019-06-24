@@ -71,7 +71,7 @@ router.post(
   '/add/new',
   auth.protectDistributorAccess,
   [
-    vs.isValidStrLenWithTrim('body', 'ui_name', 3, 50, 'Please enter a valid sales officer name between 3 to 50 characters'),
+    vs.isValidStrLenWithTrim('body', 'ui_name', 3, 50, 'Please enter a valid manager name between 3 to 50 characters'),
     vs.isMobile('body', 'ui_primary_mobile'),
     vs.ifExistIsEmail('body', 'ui_email'),
     vs.isValidStrLenWithTrim('body', 'ui_address', 3, 100, 'Please enter address name between 3 to 100 characters'),
@@ -184,7 +184,7 @@ router.post(
       return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
     }
     return res.status(200).send(
-      responseGenerator.success('Sales officer addition', 'Sales officer added successfully', [
+      responseGenerator.success('Manager addition', 'Manager added successfully', [
         {
           salesOfficerId: SOId,
           name: req.body.ui_name,
@@ -325,7 +325,7 @@ router.post(
 );
 
 /**
- * route to view of register a sales officer
+ * route to view of register a manager
  *
  * @name /sales/register/delivery
  */
