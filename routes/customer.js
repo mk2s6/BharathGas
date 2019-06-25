@@ -138,7 +138,7 @@ router.post(
       const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_BEGIN_TRANSACTION_FAILURE;
       return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
     }
-    const custId = custIdPrefix + pad(parseInt(customerId[0].max === null ? 0 : customerId[0].max) + 1, 3);
+    const custId = custIdPrefix + pad(parseInt(customerId[0].max === null ? 0 : customerId[0].max) + 1, 6);
     // console.log(custId);
 
     try {
