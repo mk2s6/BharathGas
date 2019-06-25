@@ -337,7 +337,7 @@ router.get(
   auth.protectTokenCheck,
   [
     vs.isNumeric('params', 'cust_id', 'Please provide valid customer details'),
-    vs.isExactLenWithTrim('params', 'cust_id', 3, 'Please provide valid customer details'),
+    vs.isExactLenWithTrim('params', 'cust_id', 6, 'Please provide valid customer details'),
   ],
   async (req, res) => {
     // console.log(req);
