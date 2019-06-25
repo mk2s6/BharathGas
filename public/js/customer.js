@@ -68,7 +68,7 @@ $(function () {
       dataType: 'json',
       success: function(response) {
         alert(response.data.description);
-        window.location = '/';
+        window.location.replace('/');
       },
       error: function(e) {
         alert(e.responseJSON.message);

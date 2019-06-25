@@ -20,19 +20,19 @@ $(function() {
           ui_password,
         };
         $.ajax({
-          url: '/sales/login',
+          url: '/manager/login',
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(loginDetails),
           success: function(data, status, request) {
             if (typeof data === 'string') {
-              window.location = '/';
+              window.location.replace('/');
             } else {
               alert(data.data.description);
               const token = 'x-id-token';
               localStorage[token] = request.getResponseHeader('x-id-token');
               request.setRequestHeader(token, localStorage[token]);
-              window.location = '/';
+              window.location.replace('/');
             }
           },
           error: function(e, ts, et) {

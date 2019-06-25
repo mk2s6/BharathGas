@@ -123,15 +123,20 @@ const errList = {
       message: 'Please enter a valid username and password',
       internalDescription: `Login to the distributor login is a failure as the distributor does not exist in DB`,
     },
-    ERR_SALES_OFFICER_DOES_NOT_EXIST: {
+    ERR_MANAGER_DOES_NOT_EXIST: {
       code: '30013',
       message: 'Please enter a valid username and password',
-      internalDescription: `Login to the sales officer login is a failure as the sales officer does not exist in DB`,
+      internalDescription: `Login to the manager login is a failure as the manager does not exist in DB`,
     },
     ERR_USER_CHANGE_PASSWORD_NO_MATCH: {
       code: '30014',
       message: 'Current password does not match with the existing password.!',
-      internalDescription: `Login to the sales officer login is a failure as the sales officer does not exist in DB`,
+      internalDescription: `Login to the manager login is a failure as the manager does not exist in DB`,
+    },
+    ERROR_UNCAUGHT_ERROR_ERROR:{
+      code: '30015',
+      message: errMsg.INTERNAL_SERVER_ERROR,
+      internalDescription: 'Some uncaught exception error',
     }
   },
 

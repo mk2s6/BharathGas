@@ -8,7 +8,7 @@ $(function () {
                 console.log('hi');
 
                 alert(response.data.description);
-                window.location = '/';
+                window.location.replace('/');
             },
             error: function (e, ts, ed) {
                 console.log(e, ts, ed);

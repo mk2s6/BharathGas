@@ -1,5 +1,5 @@
 {{> header }}
-{{> salesHeader }}
+{{> managerHeader }}
 
 <section class="page_breadcrumbs ds color parallax section_padding_top_20 section_padding_bottom_20">
     <div class="container">
@@ -18,9 +18,9 @@
 <section class="ls section_padding_top_30 section_padding_bottom_30">
     <div class="container">
         <div class="row">
-            <form class="sales_profile" id="sa_profile" role="form">
+            <form class="ui_profile" id="sa_profile" role="form">
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-group validate-required" id="sales_name_field"> <label for="ui_name"
+                    <div class="form-group validate-required" id="field_name"> <label for="ui_name"
                             class="control-label">
                             <span class="grey">Name:</span>
                         </label> <input type="text" class="form-control sa_field" name="ui_name" id="ui_name"
@@ -55,9 +55,9 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-group"> <label for="ui_cuty" class="control-label">
+                    <div class="form-group"> <label for="ui_city" class="control-label">
                             <span class="grey">City/Town:</span></label>
-                        <select class="form-control sa_field" name="ui_cuty" id="ui_cuty">
+                        <select class="form-control sa_field" name="ui_city" id="ui_city">
                             <option value="" selected="selected">Select a state</option>
                             <option value="{{city}}" selected="selected">{{city}}</option>
                         </select>

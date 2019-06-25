@@ -30,8 +30,8 @@ router.get('/add/new', auth.protectTokenCheck, async (req, res) => {
   switch (req.user.role) {
     case constant.defaultRoles.DISTRIBUTOR:
       return res.render('customerRegistration');
-    case constant.defaultRoles.SALES_OFFICER:
-      return res.render('customerRegistrationSales');
+    case constant.defaultRoles.MANAGER:
+      return res.render('customerRegistrationManager');
     case constant.defaultRoles.DELIVERY:
       return res.render('customerRegistrationDelivery');
     default:
@@ -135,6 +135,8 @@ router.post(
       // console.log(customerId[0].max + 1);
     } catch (e) {
       console.log(e);
+      const beUnableToInsertDetailsToDb = error.errList.internalError.ERR_BEGIN_TRANSACTION_FAILURE;
+      return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
     }
     const custId = custIdPrefix + pad(parseInt(customerId[0].max === null ? 0 : customerId[0].max) + 1, 3);
     // console.log(custId);
@@ -260,8 +262,8 @@ router.get('/list', auth.protectTokenCheck, async (req, res) => {
   switch (req.user.role) {
     case constant.defaultRoles.DISTRIBUTOR:
       return res.render('customerList');
-    case constant.defaultRoles.SALES_OFFICER:
-      return res.render('customerListSales');
+    case constant.defaultRoles.MANAGER:
+      return res.render('customerListManager');
     case constant.defaultRoles.DELIVERY:
       return res.render('customerListDelivery');
     default:
@@ -282,7 +284,7 @@ router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
     case constant.defaultRoles.DISTRIBUTOR:
       // query += true;
       break; 
-    case constant.defaultRoles.SALES_OFFICER:
+    case constant.defaultRoles.MANAGER:
       // query += ' WHERE  cust_added_by = ? AND cust_added_by_type = ?;'
       // queryParams.push(req.user.id, req.user.role);
       break;
@@ -298,7 +300,7 @@ router.get('/list/all', auth.protectTokenCheck, async (req, res) => {
       query,
       queryParams
     );
-    console.log(rows);
+    // console.log(rows);
     return res.status(200).send(responseGenerator.success('customer list', 'Customer list retrieved successfully', rows));
   } catch (e) {
     console.log(e);
@@ -316,8 +318,8 @@ router.get('/details', auth.protectTokenCheck, async (req, res) => {
   switch (req.user.role) {
     case constant.defaultRoles.DISTRIBUTOR:
       return res.render('customerDetails');
-    case constant.defaultRoles.SALES_OFFICER:
-      return res.render('customerDetailsSales');
+    case constant.defaultRoles.MANAGER:
+      return res.render('customerDetailsManager');
     case constant.defaultRoles.DELIVERY:
       return res.render('customerDetailsDelivery');
     default:
@@ -360,7 +362,7 @@ router.get(
     switch (req.user.role) {
       case constant.defaultRoles.DISTRIBUTOR:
         break; 
-      case constant.defaultRoles.SALES_OFFICER:
+      case constant.defaultRoles.MANAGER:
         break;
       case constant.defaultRoles.DELIVERY:
         query += ' AND cust_added_by = ? AND cust_added_by_type = ?;'
@@ -371,10 +373,7 @@ router.get(
     }
      
     try {
-      const [rows] = await pool.execute(query
-,
-        queryParams,
-      );
+      const [rows] = await pool.execute(query,queryParams);
       // console.log(rows);
       return res.status(200).send(responseGenerator.success('Customer details', 'Customer details fetched successfully', rows));
     } catch (e) {

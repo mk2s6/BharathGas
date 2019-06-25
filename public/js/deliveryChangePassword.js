@@ -22,7 +22,7 @@ $(function () {
             dataType: "json",
             success: function (response) {
                 alert(response.data.description);
-                window.location = '/';
+                window.location.replace('/');
             },
             error: function (error) {
                 alert(error.responseJSON.message);

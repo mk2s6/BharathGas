@@ -97,7 +97,7 @@ router.post(
           [constant.tokenType.KEY]: constant.tokenType.value.DISTRIBUTOR,
           [constant.permissionKey.CUSTOMER]: true,
           [constant.permissionKey.DISTRIBUTOR]: true,
-          [constant.permissionKey.SALES_OFFICER]: true,
+          [constant.permissionKey.MANAGER]: true,
           [constant.permissionKey.DELIVERY]: true,
         });
       } catch (e) {
@@ -829,8 +829,8 @@ router.get('/profile', auth.protectTokenCheck, async (req, res) => {
     `,
       [req.user.id],
     );
-    console.log(req.user);
-    console.log(rows);
+    // console.log(req.user);
+    // console.log(rows);
     if (rows.length !== 1) {
       const beUserDetailsNotFound = responseGenerator.dbError(error.errList.dbError.ERR_DISTRIBUTOR_PROFILE_NOT_FOUND);
       return res.status(404).send(beUserDetailsNotFound);
@@ -906,9 +906,9 @@ router.post('/profile/image/upload', auth.protectTokenCheck, async (req, res) =>
 /**
  * route to view of register a sales officer
  *
- * @name /distributor/register/salesOfficer
+ * @name /distributor/register/manager
  */
-router.get('/register/salesOfficer', auth.protectDistributorAccess, async (req, res) => {
-  res.render('salesOfficerRegistration');
+router.get('/register/manager', auth.protectDistributorAccess, async (req, res) => {
+  res.render('managerRegistration');
 });
 module.exports = router;

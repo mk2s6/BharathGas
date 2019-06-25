@@ -14,27 +14,34 @@ const mailer = require('../model/mailer');
 const multer = require('../model/multer');
 
 const router = express.Router();
-const SOIdPrefix = 'SAOFSK0';
+const MIDPrefix = 'MANGSK0';
 
 /**
- * Route for sales login page
- * @name /sales/login
+ * Route for manager home page
+ * @name /manager/
  */
-router.get('/login', auth.protectTokenVerify , async (req, res) => res.render('salesOfficerLogin'));
+router.get('/', auth.protectManagerAccess, async (req, res) => res.render('managerHome'));
+
 
 /**
- * Route for sales home page
- * @name /sales/
+ * Route for manager login page
+ * @name /manager/login
  */
-router.get('/', auth.protectSalesAccess, async (req, res) => {
+router.get('/login', auth.protectTokenVerify , async (req, res) => res.render('managerLogin'));
+
+/**
+ * Route for manager profile page
+ * @name /manager/profile
+ */
+router.get('/profile', auth.protectManagerAccess, async (req, res) => {
   try {
     const [rows] = await pool.execute(
       `
-      SELECT saof_name AS name , saof_email AS email, saof_primary_mobile AS primaryMobile, 
-                saof_address AS address, saof_city AS city, saof_state AS state, saof_country AS country, 
-                saof_pincode AS pincode, saof_secondary_mobile AS secondaryMobile
-        FROM sales_officer
-        WHERE saof_id = ?   
+      SELECT mang_name AS name , mang_email AS email, mang_primary_mobile AS primaryMobile, 
+                mang_address AS address, mang_city AS city, mang_state AS state, mang_country AS country, 
+                mang_pincode AS pincode, mang_secondary_mobile AS secondaryMobile
+        FROM manager
+        WHERE mang_id = ?   
     `,
       [req.user.id],
     );
@@ -46,7 +53,7 @@ router.get('/', auth.protectSalesAccess, async (req, res) => {
     }
     // const description = 'Distributor profile details fetched successfully';
     // return res.status(200).send(responseGenerator.success('Distributor Profile', description, rows));
-    return res.render('sales', {
+    return res.render('managerProfile', {
       name: rows[0].name,
       email: rows[0].email,
       primaryMobile: rows[0].primaryMobile,
@@ -65,7 +72,7 @@ router.get('/', auth.protectSalesAccess, async (req, res) => {
 });
 
 /**
- * @name /sales_officer/add/new
+ * @name /manager/add/new
  */
 router.post(
   '/add/new',
@@ -118,8 +125,8 @@ router.post(
     }
 
     // Variables for results
-    let salesOfficerId;
-    let salesOfficerInsert;
+    let managerId;
+    let managerInsert;
 
     // Begin Transaction
     try {
@@ -134,21 +141,21 @@ router.post(
     }
 
     try {
-      [salesOfficerId] = await conn.query('SELECT MAX(TRIM(LEADING ? FROM saof_id)) AS max FROM sales_officer', [SOIdPrefix]);
-      // console.log(salesOfficerId[0]);
+      [managerId] = await conn.query('SELECT MAX(TRIM(LEADING ? FROM mang_id)) AS max FROM manager', [MIDPrefix]);
+      // console.log(managerId[0]);
     } catch (e) {
       console.log(e);
     }
-    const SOId = SOIdPrefix + pad(parseInt(salesOfficerId[0].max === null ? 0 : salesOfficerId[0].max)  + 1, 3);
-    // console.log(SOId);
+    const MID = MIDPrefix + pad(parseInt(managerId[0].max === null ? 0 : managerId[0].max)  + 1, 3);
+    // console.log(MID);
 
     try {
-      [salesOfficerInsert] = await conn.query(
-        `INSERT INTO sales_officer(saof_id, saof_name, saof_email, saof_primary_mobile, saof_pwd, saof_secondary_mobile, 
-            saof_address, saof_city, saof_state, saof_country, saof_pincode, saof_last_login_IP) 
+      [managerInsert] = await conn.query(
+        `INSERT INTO manager(mang_id, mang_name, mang_email, mang_primary_mobile, mang_pwd, mang_secondary_mobile, 
+            mang_address, mang_city, mang_state, mang_country, mang_pincode, mang_last_login_IP) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          SOId,
+          MID,
           req.body.ui_name,
           req.body.ui_email,
           req.body.ui_primary_mobile,
@@ -186,7 +193,7 @@ router.post(
     return res.status(200).send(
       responseGenerator.success('Manager addition', 'Manager added successfully', [
         {
-          salesOfficerId: SOId,
+          managerId: MID,
           name: req.body.ui_name,
           email: req.body.ui_email,
           mobile: req.body.ui_mobile,
@@ -213,12 +220,12 @@ function pad(number, length) {
 
 
 /**
- * route for company sales login
+ * route for company manager login
  *
- * @name /sales/login
+ * @name /manager/login
  *
- * @param ui_username : Email or mobile of the sales
- * @param ui_password : password of the sales
+ * @param ui_username : Email or mobile of the manager
+ * @param ui_password : password of the manager
  *
  */
 router.post(
@@ -238,13 +245,13 @@ router.post(
     const bePassword = req.body.ui_password;
     const beUsername = req.body.ui_username;
 
-    let qStrDistDetails = 'SELECT saof_id, saof_name, saof_pwd, saof_is_email_verified FROM sales_officer ';
+    let qStrDistDetails = 'SELECT mang_id, mang_name, mang_pwd, mang_is_email_verified FROM manager ';
 
     let qRespDistDetails;
     if (hf.isEmail(beUsername)) {
-      qStrDistDetails += 'WHERE saof_email = ?';
+      qStrDistDetails += 'WHERE mang_email = ?';
     } else {
-      qStrDistDetails += 'WHERE saof_primary_mobile = ?';
+      qStrDistDetails += 'WHERE mang_primary_mobile = ?';
     }
 
     try {
@@ -260,7 +267,7 @@ router.post(
       // Verify password
       let isValidPassword;
       try {
-        isValidPassword = await auth.verifyPassword(bePassword, qRespDistDetails[0].saof_pwd);
+        isValidPassword = await auth.verifyPassword(bePassword, qRespDistDetails[0].mang_pwd);
       } catch (e) {
         // Unable to compare hash and Password
         const responseUnableToCompareHash = responseGenerator.internalError(error.errList.internalError.ERR_COMPARE_PASSWORD_AND_HASH);
@@ -274,36 +281,36 @@ router.post(
       let token;
       try {
         token = auth.genAuthToken({
-          id: qRespDistDetails[0].saof_id,
-          name: qRespDistDetails[0].saof_name,
-          role: constant.defaultRoles.SALES_OFFICER,
+          id: qRespDistDetails[0].mang_id,
+          name: qRespDistDetails[0].mang_name,
+          role: constant.defaultRoles.MANAGER,
           // Use JSON.parse instead of string.split() because JSON.parse convert it to array of numbers
           // but .split() convert it to array of strings. // branchID: qBranchIDList[0].branch_ids.split(','),
-          [constant.tokenType.KEY]: constant.tokenType.value.SALES_OFFICER,
+          [constant.tokenType.KEY]: constant.tokenType.value.MANAGER,
           [constant.permissionKey.CUSTOMER]: true,
           [constant.permissionKey.DISTRIBUTOR]: false,
-          [constant.permissionKey.SALES_OFFICER]: true,
+          [constant.permissionKey.MANAGER]: true,
           [constant.permissionKey.DELIVERY]: true,
         });
       } catch (e) {
         const responseGenerateTokenError = responseGenerator.internalError(error.errList.internalError.ERR_AUTH_TOKEN_GENERATION_ERROR);
         return res.status(405).send(responseGenerateTokenError);
       }
-      const emailVerified = qRespDistDetails[0].saof_is_email_verified ? 'Verified' : 'Not Verified';
+      const emailVerified = qRespDistDetails[0].mang_is_email_verified ? 'Verified' : 'Not Verified';
       const items = [
         {
-          username: qRespDistDetails[0].saof_name,
+          username: qRespDistDetails[0].mang_name,
           isEmailVerified: emailVerified,
         },
       ];
       try {
         const [ipUpdate] = await pool.execute(
           `
-                UPDATE sales_officer 
-                SET saof_last_login = ? , saof_last_login_IP = ?
-                WHERE saof_id = ?;
+                UPDATE manager 
+                SET mang_last_login = ? , mang_last_login_IP = ?
+                WHERE mang_id = ?;
               `,
-          [req.utc_start_time.format('YYYY-MM-DD HH:mm:ss'), req.ip, qRespDistDetails[0].saof_id],
+          [req.utc_start_time.format('YYYY-MM-DD HH:mm:ss'), req.ip, qRespDistDetails[0].mang_id],
         );
       } catch (e) {
         console.log(e);
@@ -319,7 +326,7 @@ router.post(
       // });
     }
     // Distributor does not exist in DB
-    const responseCompDistributorNotExist = responseGenerator.dbError(error.errList.dbError.ERR_SALES_OFFICER_DOES_NOT_EXIST);
+    const responseCompDistributorNotExist = responseGenerator.dbError(error.errList.dbError.ERR_MANAGER_DOES_NOT_EXIST);
     return res.status(405).send(responseCompDistributorNotExist);
   },
 );
@@ -327,19 +334,19 @@ router.post(
 /**
  * route to view of register a manager
  *
- * @name /sales/register/delivery
+ * @name /manager/register/delivery
  */
-router.get('/register/delivery', auth.protectSalesAccess, async (req, res) => {
+router.get('/register/delivery', auth.protectManagerAccess, async (req, res) => {
   res.render('deliveryRegistration');
 });
 
 /**
- * Change password route of a sales
+ * Change password route of a manager
  *
- * @name /sales/change/password
+ * @name /manager/change/password
  *
- * @param {string} ui_current_password current password of the sales
- * @param {string} ui_new_password new password of the sales
+ * @param {string} ui_current_password current password of the manager
+ * @param {string} ui_new_password new password of the manager
  */
 router.put(
   '/change/password',
@@ -363,7 +370,7 @@ router.put(
     let beHashedPassword = '';
     let rows;
     try {
-      [rows] = await pool.execute('SELECT saof_pwd as current_password FROM sales_officer WHERE saof_id = ?', [beUserID]);
+      [rows] = await pool.execute('SELECT mang_pwd as current_password FROM manager WHERE mang_id = ?', [beUserID]);
     } catch (err) {
       const responseUnableToChange = responseGenerator.internalError(
         error.errList.internalError.ERR_SELECT_QUERY_USER_CHANGE_PASSWORD_FAILURE,
@@ -394,9 +401,9 @@ router.put(
       }
       try {
         const [rows] = await pool.execute(
-          `UPDATE sales_officer
-                  SET saof_pwd = ?
-                  WHERE saof_id = ?`,
+          `UPDATE manager
+                  SET mang_pwd = ?
+                  WHERE mang_id = ?`,
           [beHashedPassword, beUserID],
         );
         // Change password successfully

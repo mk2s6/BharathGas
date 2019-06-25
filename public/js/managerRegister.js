@@ -24,12 +24,12 @@ $(function() {
     console.log(data);
     $.ajax({
       type: 'POST',
-      url: '/sales/add/new',
+      url: '/manager/add/new',
       data,
       dataType: 'json',
       success: function(response) {
         alert(response.data.description);
-        window.location = '/';
+        window.location.replace('/');
       },
       error: function(e) {
         alert(e.responseJSON.message);

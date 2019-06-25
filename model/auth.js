@@ -245,8 +245,8 @@ function protectTokenVerify(req, res, next) {
       switch (req.user.role) {
         case constant.defaultRoles.DISTRIBUTOR:
           return res.redirect('/distributor');
-        case constant.defaultRoles.SALES_OFFICER:
-          return res.redirect('/sales');
+        case constant.defaultRoles.MANAGER:
+          return res.redirect('/manager');
         case constant.defaultRoles.DELIVERY:
           return res.redirect('/delivery');
         default:
@@ -374,7 +374,7 @@ function protectDistributorAccess(req, res, next) {
   }
 }
 
-function protectSalesAccess(req, res, next) {
+function protectManagerAccess(req, res, next) {
   // console.log(req);
   const token = req.cookies[constant.TOKEN_NAME];
   // Token exist in request
@@ -401,7 +401,7 @@ function protectSalesAccess(req, res, next) {
       // is invalid here
       // console.log(payload);
       // Invalid Role hence Not authorized
-      if (req.user[constant.permissionKey.SALES_OFFICER] !== true || req.user[constant.tokenType.KEY] !== constant.tokenType.value.SALES_OFFICER) {
+      if (req.user[constant.permissionKey.MANAGER] !== true || req.user[constant.tokenType.KEY] !== constant.tokenType.value.MANAGER) {
         // return res.status(403).send(responseGenerator.authError(error.errList.authError.ERR_PR_PERMISSION_MISMATCH));
         return res.status(403).render('403');
       }
@@ -728,7 +728,7 @@ module.exports.verifyPassword = verifyPassword;
 module.exports.protectTokenVerify = protectTokenVerify;
 module.exports.protectTokenCheck = protectTokenCheck;
 module.exports.protectDistributorAccess = protectDistributorAccess;
-module.exports.protectSalesAccess = protectSalesAccess;
+module.exports.protectManagerAccess = protectManagerAccess;
 module.exports.protectDeliveryAccess = protectDeliveryAccess;
 module.exports.protectBranchAccess = protectBranchAccess;
 // module.exports.protectFSJEmpRoute = protectFSJEmpRoute;

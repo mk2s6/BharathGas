@@ -27,17 +27,18 @@ const moment = require('moment');
 const hbs = require('express-hbs');
 const responseGenerator = require('./model/response-generator');
 const constant = require('./model/constant');
+const error = require('./model/error');
 
 const passport = require('passport');
 
 /**
  * Require for Routing
  */
-const indexRouter = require('./routes/index');
+// const indexRouter = require('./routes/index');
 const locationRouter = require('./routes/location');
 const distributorRouter = require('./routes/distributor');
 const homeRouter = require('./routes/home');
-const salesRouter = require('./routes/salesofficer');
+const managerRouter = require('./routes/manager');
 const customerRouter = require('./routes/customer');
 const contactUsRouter = require('./routes/contact');
 const deliveryRouter = require('./routes/delivery');
@@ -113,15 +114,26 @@ app.engine(
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
+app.use((req, res, next) => {
+  process.on('uncaughtException', (err) => {
+    // console.log(err);
+    const errObj = new Error();
+    errObj.message = error.errList.dbError.ERROR_UNCAUGHT_ERROR_ERROR.message;
+    errObj.code = error.errList.dbError.ERROR_UNCAUGHT_ERROR_ERROR.code;
+    next(createError(errObj))
+  });
+  next();
+});
+
 /**
  *  Routing
  *  Here we have all routes defined in our production application
  */
 app.use('/', homeRouter);
-app.use('/test', indexRouter);
+// app.use('/test', indexRouter);
 app.use('/location', locationRouter);
 app.use('/distributor', distributorRouter);
-app.use('/sales', salesRouter);
+app.use('/manager', managerRouter);
 app.use('/customer', customerRouter);
 app.use('/contactUs', contactUsRouter);
 app.use('/delivery', deliveryRouter);

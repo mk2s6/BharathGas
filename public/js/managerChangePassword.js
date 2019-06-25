@@ -17,12 +17,12 @@ $(function () {
 
         $.ajax({
             type: "PUT",
-            url: "/sales/change/password",
+            url: "/manager/change/password",
             data: data,
             dataType: "json",
             success: function (response) {
                 alert(response.data.description);
-                window.location = '/';
+                window.location.replace('/');
             },
             error: function (error) {
                 alert(error.responseJSON.message);

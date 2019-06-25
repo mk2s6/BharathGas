@@ -53,7 +53,7 @@ const defaultFSJEmpRoles = {
  */
 const defaultRoles = {
   DISTRIBUTOR: 'Distributor',
-  SALES_OFFICER: 'SalesOfficer',
+  MANAGER: 'Manager',
   DELIVERY: 'Delivery',
   CUSTOMER: 'Customer',
 };
@@ -101,7 +101,7 @@ const tokenType = {
   KEY: 'tt',
   value: {
     DISTRIBUTOR: 'dist', 
-    SALES_OFFICER: 'saof', 
+    MANAGER: 'mang', 
     DELIVERY: 'delv',
     CUSTOMER: 'cust',
   },
@@ -110,7 +110,7 @@ const tokenType = {
 const permissionKey = {
   CUSTOMER: 'p_com',
   DISTRIBUTOR: 'p_d',
-  SALES_OFFICER: 'p_som',
+  MANAGER: 'p_m',
   DELIVERY: 'p_del',
 };
 

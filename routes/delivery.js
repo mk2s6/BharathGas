@@ -17,6 +17,13 @@ const router = express.Router();
 const DelIdPrefix = 'DELVSK0';
 
 /**
+ * Route for manager home page
+ * @name /manager/
+ */
+router.get('/', auth.protectDeliveryAccess, async (req, res) => res.render('deliveryHome'));
+
+
+/**
  * Route for delivery login page
  * @name /delivery/login
  */
@@ -26,7 +33,7 @@ router.get('/login', auth.protectTokenVerify , async (req, res) => res.render('d
  * Route for delivery home page
  * @name /delivery/
  */
-router.get('/', auth.protectDeliveryAccess, async (req, res) => {
+router.get('/profile', auth.protectDeliveryAccess, async (req, res) => {
   try {
     const [rows] = await pool.execute(
       `
@@ -69,7 +76,7 @@ router.get('/', auth.protectDeliveryAccess, async (req, res) => {
  */
 router.post(
   '/add/new',
-  auth.protectSalesAccess,
+  auth.protectManagerAccess,
   [
     vs.isValidStrLenWithTrim('body', 'ui_name', 3, 50, 'Please enter a valid delivery officer name between 3 to 50 characters'),
     vs.isMobile('body', 'ui_primary_mobile'),
@@ -281,7 +288,7 @@ router.post(
           [constant.tokenType.KEY]: constant.tokenType.value.DELIVERY,
           [constant.permissionKey.CUSTOMER]: true,
           [constant.permissionKey.DISTRIBUTOR]: false,
-          [constant.permissionKey.SALES_OFFICER]: false,
+          [constant.permissionKey.MANAGER]: false,
           [constant.permissionKey.DELIVERY]: true,
         });
       } catch (e) {
@@ -318,7 +325,7 @@ router.post(
       // });
     }
     // Distributor does not exist in DB
-    const responseCompDistributorNotExist = responseGenerator.dbError(error.errList.dbError.ERR_SALES_OFFICER_DOES_NOT_EXIST);
+    const responseCompDistributorNotExist = responseGenerator.dbError(error.errList.dbError.ERR_MANAGER_DOES_NOT_EXIST);
     return res.status(405).send(responseCompDistributorNotExist);
   },
 );
