@@ -63,13 +63,16 @@
 	</style>
 	<script>
 		$(document).on('pagebeforeshow', function (event) {
+			
 			$('a').on('click', function (e) {
-				e.preventDefault();
 				var status = navigator.onLine;
-				if (!status)
+				if (!status){
+					e.preventDefault();
 					alert('Please check your internet connection to proceed');
-				else $(this).click();
+					return;
+				}
 			});
+			return;
 		});
 
 	</script>
