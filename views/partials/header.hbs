@@ -4,6 +4,7 @@
 
 
 <!-- Mirrored from webdesign-finder.com/html/electrix/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Sep 2018 02:25:59 GMT -->
+
 <head>
 	<title>Bharath gas</title>
 	<meta charset="utf-8">
@@ -21,41 +22,59 @@
 	<link rel="stylesheet" href="css/main.css" class="color-switcher-link">
 	<link rel="stylesheet" href="css/shop.css">
 	<!-- fonts -->
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-<link href='//fonts.googleapis.com/css?family=Alegreya:400,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+	<script src="http://code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.js"></script>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+		integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+	<link
+		href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+		rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Alegreya:400,400italic,700,700italic,900,900italic' rel='stylesheet'
+		type='text/css'>
 	<script src="js/vendor/modernizr-2.6.2.min.js"></script>
+
 	<!--[if lt IE 9]>
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<script src="js/vendor/respond.min.js"></script>
 		<script src="js/vendor/jquery-1.12.4.min.js"></script>
 	<![endif]-->
 	<script>
-			function startTime() {
-			  var today = new Date();
-			  var h = today.getHours();
-			  var m = today.getMinutes();
-			  var s = today.getSeconds();
-			  m = checkTime(m);
-			  s = checkTime(s);
-			  document.getElementById('txt').innerHTML =
-			  h + ":" + m + ":" + s;
-			  var t = setTimeout(startTime, 500);
-			}
-			function checkTime(i) {
-			  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-			  return i;
-			}
-			</script>
-			<style>
-				body{
-					background-color: ghostwhite;
-				}
-			</style>
+		function startTime() {
+			var today = new Date();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			m = checkTime(m);
+			s = checkTime(s);
+			document.getElementById('txt').innerHTML =
+				h + ":" + m + ":" + s;
+			var t = setTimeout(startTime, 500);
+		}
+		function checkTime(i) {
+			if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+			return i;
+		}
+	</script>
+	<style>
+		body {
+			background-color: ghostwhite;
+		}
+	</style>
+	<script>
+		$(window).on('pagebeforeload', function (event) {
+			$('a').on('click', function (e) {
+				e.preventDefault();
+				var status = navigator.onLine;
+				if (!status)
+					alert('Please check your internet connection to proceed');
+				else $(this).click();
+			});
+		});
+
+	</script>
 
 </head>
 
-<body style="background-color:ghostwhite;" onload="startTime()">
+<body style="background-color:ghostwhite;" id="body" onload="startTime()">
 	<!--[if lt IE 9]>
 		<div class="bg-danger text-center">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" class="highlight">upgrade your browser</a> to improve your experience.</div>
 	<![endif]-->
@@ -63,14 +82,18 @@
 		<div class="preloader_image"></div>
 	</div>
 	<!-- search modal -->
-	<div class="modal" tabindex="-1" role="dialog" aria-labelledby="search_modal" id="search_modal"> <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		<span aria-hidden="true">
-			<i class="rt-icon2-cross2"></i>
-		</span>
-	</button>
+	<div class="modal" tabindex="-1" role="dialog" aria-labelledby="search_modal" id="search_modal"> <button
+			type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				<i class="rt-icon2-cross2"></i>
+			</span>
+		</button>
 		<div class="widget widget_search">
 			<form method="get" class="searchform search-form form-inline" action="#">
-				<div class="form-group bottommargin_0"> <input type="text" value="" name="search" class="form-control" placeholder="Search keyword" id="modal-search-input"> </div> <button type="submit" class="theme_button">Search</button> </form>
+				<div class="form-group bottommargin_0"> <input type="text" value="" name="search" class="form-control"
+						placeholder="Search keyword" id="modal-search-input"> </div> <button type="submit"
+					class="theme_button">Search</button>
+			</form>
 		</div>
 	</div>
 	<!-- Unyson messages modal -->
@@ -92,15 +115,20 @@
 			<section class="page_topline ls section_padding_15">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-md-4 col-sm-12 col-md-push-4 text-center"> <p> <i class="fa fa-phone grey rightpadding_5" aria-hidden="true"></i> <a href="tel:+918578222214">08578222214</a> </p> </div>
+						<div class="col-md-4 col-sm-12 col-md-push-4 text-center">
+							<p> <i class="fa fa-phone grey rightpadding_5" aria-hidden="true"></i> <a
+									href="tel:+918578222214">08578222214</a> </p>
+						</div>
 						<div class="col-md-4 col-sm-6 col-md-pull-4 text-center text-md-left">
 							<div class="inline-content small-text">
-								<p id="txt" style="font-weight:bold; font-size:15px;">   </p>								
+								<p id="txt" style="font-weight:bold; font-size:15px;"> </p>
 							</div>
 						</div>
 						<div class="col-md-4 col-sm-6 text-center text-md-right">
 							<div class="inline-content small-text">
-								<p class="greylinks"> <i class="fa fa-pencil grey rightpadding_5" aria-hidden="true"></i> <a href="mailto:moderngasskht@gmail.com">moderngasskht@gmail.com</a> </p>
+								<p class="greylinks"> <i class="fa fa-pencil grey rightpadding_5"
+										aria-hidden="true"></i> <a
+										href="mailto:moderngasskht@gmail.com">moderngasskht@gmail.com</a> </p>
 							</div>
 						</div>
 					</div>
@@ -111,5 +139,5 @@
 					<div class="row">
 						<div class="col-sm-12 display_table">
 							<div class="header_left_logo display_table_cell"> <a href="/" class="logo top_logo">
-                        <img src="images/logo.png" alt="">
-                    </a> </div>
+									<img src="images/logo.png" alt="">
+								</a> </div>
