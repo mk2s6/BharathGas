@@ -61,17 +61,13 @@
 		}
 	</style>
 	<script>
-		$(document).on('click', function (event) {
-			$('a').on('click', function (e) {
-				var status = navigator.onLine;
-				console.log(status);
-				if (!status) {
-					e.preventDefault();
-					alert('Please check your internet connection to proceed');
-					return;
-				}
+		$(window).on('click', function (event) {
+			let status = navigator.onLine;
+			if (!status) {
+				event.preventDefault();
+				alert('Please check your internet connection to proceed');
 				return;
-			});
+			}
 			return;
 		});
 
