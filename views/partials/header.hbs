@@ -60,7 +60,7 @@
 		}
 	</style>
 	<script>
-		$(window).on('pagebeforeshow', function (event) {
+		$(document).on('pagebeforeshow', function (event) {
 			$('a').on('click', function (e) {
 				e.preventDefault();
 				var status = navigator.onLine;
