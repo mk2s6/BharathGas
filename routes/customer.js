@@ -113,6 +113,7 @@ router.post(
       return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
     }
 
+    const custEmail = (req.body.ui_email === '' || req.body.ui_email === undefined  ) ? null : req.body.ui_email;
     // Variables for results
     let customerId;
     let customerInsert;
@@ -152,7 +153,7 @@ router.post(
           req.body.ui_proprietor_name,
           req.body.ui_business_name,
           req.body.ui_feedback,
-          req.body.ui_email,
+          custEmail,
           req.body.ui_latitude,
           req.body.ui_longitude,
           req.body.ui_mobile,

@@ -124,6 +124,7 @@ router.post(
       return res.status(500).send(responseGenerator.internalError(beUnableToInsertDetailsToDb));
     }
 
+    const delvEmail = (req.body.ui_email === '' || req.body.ui_email === undefined  ) ? null : req.body.ui_email;
     // Variables for results
     let deliveryId;
     let deliveryInsert;
@@ -157,7 +158,7 @@ router.post(
         [
           DvId,
           req.body.ui_name,
-          req.body.ui_email,
+          delvEmail,
           req.body.ui_primary_mobile,
           beHashedPassword,
           req.body.ui_secondary_mobile,
