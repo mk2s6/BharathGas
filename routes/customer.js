@@ -356,7 +356,7 @@ router.get(
     (SELECT cdi_company_used FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS omc,
     (SELECT CONCAT(  cdi_demand_per_month, cdi_demand_per_month_type) FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS demand,
     (SELECT CONCAT(  cdi_package, cdi_package_type) FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS package,
-    (SELECT CONCAT(  cdi_running_discount, '%') FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS discount
+    (SELECT CONCAT(  cdi_running_discount) FROM customer_demand_info WHERE cdi_cust_id = cust_id) AS discount
     FROM customer WHERE cust_id = ?  `;
     let queryParams = [custId];
 
