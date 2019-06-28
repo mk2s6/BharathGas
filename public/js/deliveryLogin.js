@@ -16,8 +16,8 @@ $(function() {
         || ui_password !== null
       ) {
         const loginDetails = {
-          ui_username,
-          ui_password,
+          ui_username : ui_username,
+          ui_password : ui_password,
         };
         $.ajax({
           url: '/delivery/login',

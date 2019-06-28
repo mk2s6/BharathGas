@@ -11,15 +11,15 @@ $(function() {
     const ui_pincode = $('#ui_pincode').val();
     const ui_secondary_mobile = $('#ui_secondary_mobile').val();
     const data = {
-      ui_name,
-      ui_primary_mobile,
-      ui_email,
-      ui_address,
-      ui_city,
-      ui_state,
-      ui_country,
-      ui_pincode,
-      ui_secondary_mobile,
+      ui_name : ui_name,
+      ui_primary_mobile : ui_primary_mobile,
+      ui_email : ui_email,
+      ui_address : ui_address,
+      ui_city : ui_city,
+      ui_state : ui_state,
+      ui_country : ui_country,
+      ui_pincode : ui_pincode,
+      ui_secondary_mobile : ui_secondary_mobile,
     };
     console.log(data);
     $.ajax({
