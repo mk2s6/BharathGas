@@ -20,7 +20,7 @@ $(function () {
   function display(customerList) {
     const customerContent = $('#customer_tbody');
     customerContent.html('');
-    console.log(customerList);
+    // console.log(customerList);
     $.each(customerList, function (i, customer) {
     //   customer.i = i;
     // console.log(customerContent);\
@@ -42,7 +42,7 @@ $(function () {
       contentType: 'application/json',
       url: '/customer/list/all',
       success: function(response) {
-          console.log(response);
+          // console.log(response);
           if (response.data.items.length === 0) {
             alert('Customer does not exist please provide valid details');
             window.history.back();
@@ -55,7 +55,7 @@ $(function () {
         alert(e.responseJSON.message);
         if (e.status === 422) {
           e.responseJSON.errors.forEach( function(err) {
-            console.log(err);
+            // console.log(err);
             alert(err.message);
             $('#'+err.field).val('');
           });

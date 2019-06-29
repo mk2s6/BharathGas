@@ -157,7 +157,7 @@ app.use((req, res, next) => {
 
 // error handler
 app.use((err, req, res, next) => {
-  // console.log(err);
+  console.log(err);
   // set locals, only providing error in development
   res.locals.message = err.message;
   // TODO Add environment setting for development and production and enable this

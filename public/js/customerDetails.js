@@ -58,12 +58,12 @@ $(function () {
       error: function(e) {
         alert(e.responseJSON.message);
         if (e.status === 422) {
+          e.responseJSON.errors.forEach( function (err)  {
+            // console.log(err);
+            alert(err.message);
+            $(`#${err.field}`).val('');
+          });
           window.history.back();
-          // e.responseJSON.errors.forEach( function (err)  {
-          //   console.log(err);
-          //   alert(err.message);
-          //   $(`#${err.field}`).val('');
-          // });
         }
       },
     });
