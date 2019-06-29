@@ -61,7 +61,7 @@ $(function () {
           e.responseJSON.errors.forEach( function (err)  {
             // console.log(err);
             alert(err.message);
-            $(`#${err.field}`).val('');
+            $('#'+err.field).val('');
           });
           window.history.back();
         }
