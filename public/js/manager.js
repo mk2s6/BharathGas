@@ -28,7 +28,7 @@ $(function() {
             if (typeof data === 'string') {
               window.location.replace('/');
             } else {
-              alert(data.data.description);
+              // alert(data.data.description);
               const token = 'x-id-token';
               localStorage[token] = request.getResponseHeader('x-id-token');
               request.setRequestHeader(token, localStorage[token]);

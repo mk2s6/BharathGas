@@ -5,13 +5,15 @@ $(function () {
             type: "POST",
             url: "/logout",
             success: function (response) {
-                console.log('hi');
+                // console.log('hi');
 
-                alert(response.data.description);
+                // alert(response.data.description);
                 window.location.replace('/');
             },
             error: function (e, ts, ed) {
-                console.log(e, ts, ed);
+                // console.log(e, ts, ed);
+                window.location.replace('/');
+
             }
         });
     });
