@@ -80,7 +80,7 @@ router.post(
   [
     vs.isValidStrLenWithTrim('body', 'ui_name', 3, 50, 'Please enter a valid manager name between 3 to 50 characters'),
     vs.isMobile('body', 'ui_primary_mobile'),
-    vs.ifExistIsEmail('body', 'ui_email'),
+    vs.isEmail('body', 'ui_email'),
     vs.isValidStrLenWithTrim('body', 'ui_address', 3, 100, 'Please enter address name between 3 to 100 characters'),
     vs.ifExistIsMobile('body', 'ui_secondary_mobile'),
     vs.isValidStrLenWithTrim('body', 'ui_city', 3, 50, 'Please select a valid city'),
