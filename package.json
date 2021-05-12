@@ -46,7 +46,7 @@
     "multer": "^1.4.1",
     "mysql-import": "^2.0.2",
     "mysql2": "^1.6.4",
-    "nodemailer": "^5.1.1",
+    "nodemailer": "^6.4.16",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
